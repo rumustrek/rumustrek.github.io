@@ -1,1 +1,640 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Cookie Angka Keberuntungan 00-99</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 30px;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #f0f0f0;
+        }
+        
+        h1 {
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .fortune-cookie {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            margin: 30px auto;
+            background: #f8e8c8;
+            border-radius: 150px 150px 0 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .fortune-cookie:hover {
+            transform: scale(1.05);
+        }
+        
+        .fortune-cookie:active {
+            transform: scale(0.95);
+        }
+        
+        .cookie-crack {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            clip-path: polygon(50% 0%, 55% 30%, 50% 100%, 45% 30%);
+        }
+        
+        .fortune-paper {
+            position: absolute;
+            width: 250px;
+            height: 80px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            top: -90px;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .fortune-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #d4af37;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+        
+        .fortune-message {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .generate-btn {
+            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .generate-btn:hover {
+            background: linear-gradient(135deg, #b8941f 0%, #9c7d1a 100%);
+            box-shadow: 0 7px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        .lucky-numbers-btn {
+            background: #4a6fa5;
+            color: white;
+        }
+        
+        .lucky-numbers-btn:hover {
+            background: #3a5a8c;
+        }
+        
+        .history-btn {
+            background: #6b5b95;
+            color: white;
+        }
+        
+        .history-btn:hover {
+            background: #5a4a84;
+        }
+        
+        .numbers-display {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .number-box {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #d4af37;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid #f0f0f0;
+            letter-spacing: 1px;
+        }
+        
+        .number-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            border-color: #d4af37;
+        }
+        
+        .history-section {
+            background: #f9f9f9;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+        
+        .history-item {
+            background: white;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 5px solid #d4af37;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        }
+        
+        .history-date {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .meaning-section {
+            background: #f0f7ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 5px solid #4a6fa5;
+        }
+        
+        .meaning-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .meaning-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .meaning-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: #4a6fa5;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+        }
+        
+        .instruction {
+            background: #fff8e1;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #ffc107;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .fortune-cookie {
+                width: 250px;
+                height: 125px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .numbers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            
+            .number-box {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .special-number {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
+            color: white !important;
+            border-color: #ff6b6b !important;
+        }
+        
+        .double-zero {
+            background: linear-gradient(135deg, #4a6fa5 0%, #3a5a8c 100%) !important;
+            color: white !important;
+            border-color: #4a6fa5 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-cookie-bite"></i> ANGKA KEBERUNTUNGAN</h1>
+        </header>>
+        
+        <div class="fortune-cookie" id="fortuneCookie">
+            <div class="cookie-crack"></div>
+            <div class="fortune-paper" id="fortunePaper">
+                <div class="fortune-number" id="currentFortune">00</div>
+                <div class="fortune-message" id="fortuneMessage">Angka Keberuntungan Anda</div>
+            </div>
+            <i class="fas fa-cookie-bite" style="font-size: 3rem; color: #b8941f;"></i>
+        </div>
+        
+        <div class="controls">
+            <button class="generate-btn" id="generateBtn">
+                <i class="fas fa-magic"></i> Generate Angka 00-99
+            </button>
+            <button class="lucky-numbers-btn" id="luckyNumbersBtn">
+                <i class="fas fa-star"></i> 6 Angka 00-99
+            </button>
+        </div>
+        
+        <div class="numbers-display" id="numbersDisplay">
+            <h3><i class="fas fa-dice"></i> 6 Angka (00-99)</h3>
+            <div class="numbers-grid" id="numbersGrid"></div>
+            <p style="margin-top: 15px; color: #666; font-style: italic;">
+                <i class="fas fa-info-circle"></i> Semua angka dalam format 2 digit 00-99.
+            </p>
+        </div>
+    </div>
 
+    <script>
+        function formatTwoDigits(num) {
+            return num.toString().padStart(2, '0');
+        }
+        
+        const fortuneCookie = document.getElementById('fortuneCookie');
+        const fortunePaper = document.getElementById('fortunePaper');
+        const currentFortune = document.getElementById('currentFortune');
+        const fortuneMessage = document.getElementById('fortuneMessage');
+        const generateBtn = document.getElementById('generateBtn');
+        const luckyNumbersBtn = document.getElementById('luckyNumbersBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const numbersDisplay = document.getElementById('numbersDisplay');
+        const numbersGrid = document.getElementById('numbersGrid');
+        const historySection = document.getElementById('historySection');
+        const historyList = document.getElementById('historyList');
+        const clearHistoryBtn = document.getElementById('clearHistory');
+        const notification = document.getElementById('notification');
+        
+        let currentNumber = "00";
+        let history = JSON.parse(localStorage.getItem('fortuneHistory')) || [];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHistoryDisplay();
+            generateRandomFortune();
+        });
+        
+        function generateRandomFortune() {
+            const randomNum = Math.floor(Math.random() * 100);
+            currentNumber = formatTwoDigits(randomNum);
+            
+            const messages = [
+                ""
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            
+            currentFortune.textContent = currentNumber;
+            fortuneMessage.textContent = randomMessage;
+            
+            fortunePaper.style.display = 'flex';
+            fortuneCookie.classList.add('shake');
+            
+            setTimeout(() => {
+                fortuneCookie.classList.remove('shake');
+            }, 500);
+            
+            saveToHistory(currentNumber, randomMessage);
+            
+            return currentNumber;
+        }
+        
+        function generateLuckyNumbers() {
+            const numbers = new Set();
+            
+            while (numbers.size < 6) {
+                const num = Math.floor(Math.random() * 100);
+                numbers.add(formatTwoDigits(num));
+            }
+            
+            const sortedNumbers = Array.from(numbers).sort();
+            
+            displayLuckyNumbers(sortedNumbers);
+            
+            numbersDisplay.style.display = 'block';
+            historySection.style.display = 'none';
+            
+            return sortedNumbers;
+        }
+        
+        function displayLuckyNumbers(numbers) {
+            numbersGrid.innerHTML = '';
+            
+            numbers.forEach(number => {
+                const numberBox = document.createElement('div');
+                numberBox.className = 'number-box pulse';
+                numberBox.textContent = number;
+                
+                if (number === "00") {
+                    numberBox.classList.add('double-zero');
+                }
+                
+                numbersGrid.appendChild(numberBox);
+            });
+        }
+        
+        function saveToHistory(number, message) {
+            const historyItem = {
+                number: number,
+                message: message,
+                date: new Date().toLocaleString('id-ID'),
+                timestamp: new Date().getTime()
+            };
+            
+            history.unshift(historyItem);
+            
+            if (history.length > 20) {
+                history.pop();
+            }
+            
+            localStorage.setItem('fortuneHistory', JSON.stringify(history));
+            
+            updateHistoryDisplay();
+            
+            showNotification();
+        }
+        
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p style="text-align: center; color: #888;">Belum ada riwayat angka keberuntungan.</p>';
+                return;
+            }
+            
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                
+                const dateObj = new Date(item.timestamp);
+                const formattedDate = dateObj.toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                historyItem.innerHTML = `
+                    <div>
+                        <strong style="color: ${item.number === '00' ? '#4a6fa5' : '#d4af37'}; 
+                                font-size: 1.2rem; letter-spacing: 1px;">${item.number}</strong>
+                        <div style="font-size: 0.9rem; color: #666;">${item.message}</div>
+                    </div>
+                    <div class="history-date">${formattedDate}</div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        function showNotification() {
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        fortuneCookie.addEventListener('click', function() {
+            generateRandomFortune();
+            this.classList.add('pulse');
+            
+            setTimeout(() => {
+                this.classList.remove('pulse');
+            }, 500);
+        });
+        
+        generateBtn.addEventListener('click', function() {
+            generateRandomFortune();
+            this.classList.add('pulse');
+            
+            setTimeout(() => {
+                this.classList.remove('pulse');
+            }, 500);
+        });
+        
+        luckyNumbersBtn.addEventListener('click', function() {
+            generateLuckyNumbers();
+            this.classList.add('pulse');
+            
+            setTimeout(() => {
+                this.classList.remove('pulse');
+            }, 500);
+        });
+        
+        historyBtn.addEventListener('click', function() {
+            historySection.style.display = 'block';
+            numbersDisplay.style.display = 'none';
+            this.classList.add('pulse');
+            
+            setTimeout(() => {
+                this.classList.remove('pulse');
+            }, 500);
+        });
+        
+        clearHistoryBtn.addEventListener('click', function() {
+            if (confirm("Apakah Anda yakin ingin menghapus semua riwayat?")) {
+                history = [];
+                localStorage.removeItem('fortuneHistory');
+                updateHistoryDisplay();
+                
+                notification.innerHTML = '<i class="fas fa-trash"></i> Riwayat telah dihapus!';
+                notification.style.background = '#f44336';
+                showNotification();
+                
+                setTimeout(() => {
+                    notification.innerHTML = '<i class="fas fa-check-circle"></i> Angka keberuntungan telah disimpan!';
+                    notification.style.background = '#4CAF50';
+                }, 3500);
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                generateRandomFortune();
+            }
+            
+            if (e.code === 'KeyL' && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                generateLuckyNumbers();
+            }
+        });
+        
+        fortuneCookie.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.95)';
+        });
+        
+        fortuneCookie.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+            generateRandomFortune();
+        });
+        
+        setTimeout(() => {
+            generateRandomFortune();
+        }, 1000);
+    </script>
+</body>
+</html>
