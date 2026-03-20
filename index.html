@@ -1,640 +1,3204 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fortune Cookie Angka Keberuntungan 00-99</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RUMUS OTOMATIS - RAN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            padding: 30px;
-            position: relative;
-        }
-        
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px dashed #f0f0f0;
-        }
-        
-        h1 {
-            color: #d4af37;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-        
-        .subtitle {
-            color: #666;
-            font-size: 1.1rem;
-        }
-        
-        .fortune-cookie {
-            position: relative;
-            width: 300px;
-            height: 150px;
-            margin: 30px auto;
-            background: #f8e8c8;
-            border-radius: 150px 150px 0 0;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-        
-        .fortune-cookie:hover {
-            transform: scale(1.05);
-        }
-        
-        .fortune-cookie:active {
-            transform: scale(0.95);
-        }
-        
-        .cookie-crack {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            clip-path: polygon(50% 0%, 55% 30%, 50% 100%, 45% 30%);
-        }
-        
-        .fortune-paper {
-            position: absolute;
-            width: 250px;
-            height: 80px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 5px;
-            padding: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            top: -90px;
-            animation: slideDown 0.5s ease;
-        }
-        
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .fortune-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #d4af37;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            letter-spacing: 1px;
-        }
-        
-        .fortune-message {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-            text-align: center;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            margin: 30px 0;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            padding: 12px 25px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .generate-btn {
-            background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
-            color: white;
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-        
-        .generate-btn:hover {
-            background: linear-gradient(135deg, #b8941f 0%, #9c7d1a 100%);
-            box-shadow: 0 7px 20px rgba(212, 175, 55, 0.4);
-        }
-        
-        .lucky-numbers-btn {
-            background: #4a6fa5;
-            color: white;
-        }
-        
-        .lucky-numbers-btn:hover {
-            background: #3a5a8c;
-        }
-        
-        .history-btn {
-            background: #6b5b95;
-            color: white;
-        }
-        
-        .history-btn:hover {
-            background: #5a4a84;
-        }
-        
-        .numbers-display {
-            background: #f9f9f9;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            display: none;
-        }
-        
-        .numbers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .number-box {
-            width: 70px;
-            height: 70px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #d4af37;
-            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border: 3px solid #f0f0f0;
-            letter-spacing: 1px;
-        }
-        
-        .number-box:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-            border-color: #d4af37;
-        }
-        
-        .history-section {
-            background: #f9f9f9;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            display: none;
-        }
-        
-        .history-list {
-            max-height: 200px;
-            overflow-y: auto;
-            margin-top: 15px;
-        }
-        
-        .history-item {
-            background: white;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            border-left: 5px solid #d4af37;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
-        }
-        
-        .history-date {
-            font-size: 0.85rem;
-            color: #888;
-        }
-        
-        .meaning-section {
-            background: #f0f7ff;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
-            border-left: 5px solid #4a6fa5;
-        }
-        
-        .meaning-item {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed #ddd;
-        }
-        
-        .meaning-item:last-child {
-            margin-bottom: 0;
-            border-bottom: none;
-        }
-        
-        .meaning-number {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: #4a6fa5;
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 40px;
-            margin-right: 10px;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-        
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .instruction {
-            background: #fff8e1;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
-            border-left: 5px solid #ffc107;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .fortune-cookie {
-                width: 250px;
-                height: 125px;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            button {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .numbers-grid {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            }
-            
-            .number-box {
-                width: 60px;
-                height: 60px;
-            }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .pulse {
-            animation: pulse 0.5s ease;
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        
-        .shake {
-            animation: shake 0.5s ease;
-        }
-        
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none;
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        .special-number {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%) !important;
-            color: white !important;
-            border-color: #ff6b6b !important;
-        }
-        
-        .double-zero {
-            background: linear-gradient(135deg, #4a6fa5 0%, #3a5a8c 100%) !important;
-            color: white !important;
-            border-color: #4a6fa5 !important;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-cookie-bite"></i> ANGKA KEBERUNTUNGAN</h1>
-        </header>>
-        
-        <div class="fortune-cookie" id="fortuneCookie">
-            <div class="cookie-crack"></div>
-            <div class="fortune-paper" id="fortunePaper">
-                <div class="fortune-number" id="currentFortune">00</div>
-                <div class="fortune-message" id="fortuneMessage">Angka Keberuntungan Anda</div>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+html,
+body {
+  min-height: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-y: auto;
+  overscroll-behavior-x: none;
+}
+:root {
+  --primary-color: #667eea;
+  --danger-color: #ff3333;
+  --success-color: #4caf50;
+  --warning-color: #f39c12;
+  --info-color: #2196f3;
+  --secondary-color: #7c3aed;
+  --gray-color: #6b7280;
+  --light-bg: #f8fafc;
+  --dark-bg: #2d3748;
+  --light-card: #ffffff;
+  --dark-card: #2d3748;
+  --light-text: #2d3748;
+  --dark-text: #e2e8f0;
+  --border-light: #e9ecef;
+  --border-dark: #4a5568;
+  --tab-font: 11px;
+  --tab-pad-x: 10px;
+  --tab-pad-y: 8px;
+}
+body {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  min-height: 67vh;
+  padding: 6.7px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-x: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+body.dark-theme {
+  background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+  color: #e2e8f0;
+}
+.main-container {
+  max-width: 804px;
+  width: 100%;
+  margin: 0 auto;
+  background: white;
+  border-radius: 10.1px;
+  padding: 13.4px;
+  box-shadow: 0 8px 16.1px rgba(0, 0, 0, 0.12);
+  transition: box-shadow 0.3s ease;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+body.dark-theme .main-container {
+  background: #2d3748;
+  box-shadow: 0 8px 16.1px rgba(0, 0, 0, 0.2);
+}
+.header {
+  text-align: center;
+  margin-bottom: 13.4px;
+  padding-bottom: 10.1px;
+  border-bottom: 0.67px solid #e9ecef;
+}
+body.dark-theme .header {
+  border-bottom-color: #4a5568;
+}
+.header h1 {
+  font-family: 'Orbitron', sans-serif;
+  color: #2d3748;
+  margin-bottom: 5.4px;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+body.dark-theme .header h1 {
+  color: #e2e8f0;
+}
+.subtitle {
+  text-align: center;
+  color: #718096;
+  font-size: 10.1px;
+  line-height: 1.1;
+  max-width: 469px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+body.dark-theme .subtitle {
+  color: #a0aec0;
+}
+.theme-toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1000001;
+  margin: 0;
+  text-align: initial;
+}
+.theme-toggle button {
+  width: 29.5px;
+  height: 29.5px;
+  padding: 0;
+  border-radius: 770px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-size: 12.1px;
+  font-weight: 470;
+  color: #fff;
+  background: linear-gradient(135deg, #4a5568, #718096);
+  box-shadow: 0 5.4px 12.1px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.theme-toggle button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6.7px 14.8px rgba(0, 0, 0, 0.22);
+}
+.theme-toggle button:active {
+  transform: translateY(0px);
+  box-shadow: 0 4.1px 9.4px rgba(0, 0, 0, 0.18);
+}
+body.dark-theme .theme-toggle button {
+  background: linear-gradient(135deg, #4a5568, #718096);
+}
+#themeText {
+  display: none;
+}
+.color-as {
+  color: #3498db !important;
+  font-weight: 402;
+}
+.color-cop {
+  color: #9b59b6 !important;
+  font-weight: 402;
+}
+.color-kepala {
+  color: #e74c3c !important;
+  font-weight: 402;
+}
+.color-ekor {
+  color: #2ecc71 !important;
+  font-weight: 402;
+}
+.color-jumlah {
+  color: #f39c12 !important;
+  font-weight: 402;
+}
+.color-default {
+  color: inherit !important;
+}
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 13.4px;
+  margin-bottom: 13.4px;
+  position: relative;
+  z-index: 2;
+  max-width: 100%;
+  overflow: visible;
+  contain: none;
+}
+.main-grid > * {
+  min-width: 0;
+}
+.input-section,
+.output-section {
+  background: #f8f9fa;
+  padding: 13.4px;
+  border-radius: 8px;
+  border: 0.67px solid #e9ecef;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 3;
+  overflow: visible;
+  min-height: 0;
+}
+body.dark-theme .input-section,
+body.dark-theme .output-section {
+  background: #4a5568;
+  border-color: #718096;
+}
+.section-title {
+  color: #2d3748;
+  margin-bottom: 10.1px;
+  font-size: 12.1px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5.4px;
+  transition: all 0.3s ease;
+}
+body.dark-theme .section-title {
+  color: #e2e8f0;
+}
+.section-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom: 10.1px;
+}
+.section-header .section-title{
+  margin-bottom: 0;
+}
+.header-toggle{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 0.67px solid #e2e8f0;
+  background:#fff;
+  cursor:pointer;
+  user-select:none;
+  white-space:nowrap;
+}
+.header-toggle input[type='checkbox']{
+  width: var(--cb-size);
+  height: var(--cb-size);
+  margin:0;
+  flex:0 0 auto;
+  cursor:pointer;
+}
+.header-toggle span{
+  font-size: 8px;
+  font-weight: 402;
+  line-height: 1;
+  color:#2d3748;
+}
+body.dark-theme .header-toggle{
+  background:#2d3748;
+  border-color:#718096;
+}
+body.dark-theme .header-toggle span{
+  color:#e2e8f0;
+}
+.data-input {
+  margin-bottom: 8px;
+}
+.data-input textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 6.7px;
+  font-size: 10px;
+  resize: vertical;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+  background: white;
+  color: #333;
+  line-height: 1.3;
+}
+body.dark-theme .data-input textarea {
+  background: #2d3748;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+.data-input textarea:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.1);
+}
+body.dark-theme .data-input textarea:focus {
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.2);
+}
+.data-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5.4px;
+  margin-bottom: 8px;
+}
+.stat-box {
+  background: white;
+  padding: 4.5px;
+  border-radius: 4.1px;
+  text-align: center;
+  border: 0.67px solid #e2e8f0;
+  transition: all 0.3s ease;
+  box-shadow: 0 1.4px 2.7px rgba(0, 0, 0, 0.05);
+}
+body.dark-theme .stat-box {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.stat-label {
+  font-size: 8px;
+  color: #718096;
+  margin-bottom: 2.7px;
+  font-weight: 402;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+body.dark-theme .stat-label {
+  color: #a0aec0;
+}
+.stat-value {
+  font-size: 10px;
+  font-weight: bold;
+  color: #2d3748;
+}
+body.dark-theme .stat-value {
+  color: #e2e8f0;
+}
+.progress-container {
+  margin-bottom: 10.1px;
+}
+.progress-bar {
+  width: 100%;
+  height: 5.4px;
+  background: #e0e0e0;
+  border-radius: 2.7px;
+  margin-top: 2.7px;
+  overflow: hidden;
+  position: relative;
+}
+body.dark-theme .progress-bar {
+  background: #4a5568;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 2.7px;
+}
+.progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8px;
+  color: #718096;
+  margin-bottom: 2.7px;
+}
+body.dark-theme .progress-text {
+  color: #a0aec0;
+}
+.controls {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6.7px;
+  margin-bottom: 6.7px;
+}
+.controls .control-group {
+  min-width: 0;
+}
+.control-group {
+  display: flex;
+  flex-direction: column;
+}
+.control-group label {
+  font-size: 8px;
+  color: #2d3748;
+  margin-bottom: 4.1px;
+  font-weight: 402;
+  display: flex;
+  align-items: center;
+  gap: 2.7px;
+  user-select: none;
+}
+body.dark-theme .control-group label {
+  color: #e2e8f0;
+}
+.control-group input,
+.control-group select {
+  padding: 4.1px 5.4px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 4.1px;
+  font-size: 8px;
+  background: white;
+  color: #333;
+  transition: all 0.3s ease;
+  font-family: inherit;
+  height: 22.8px;
+}
+body.dark-theme .control-group input,
+body.dark-theme .control-group select {
+  background: #2d3748;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+.control-group input:focus,
+.control-group select:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.1);
+}
+body.dark-theme .control-group input:focus,
+body.dark-theme .control-group select:focus {
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.2);
+}
+.control-input {
+  background: #fff;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 4.1px;
+  padding: 0 6.7px;
+  display: flex;
+  align-items: center;
+  gap: 6.7px;
+  height: 22.8px;
+  min-height: 22.8px;
+}
+body.dark-theme .control-input {
+  background: #2d3748;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+.checkbox-input {
+  cursor: pointer;
+}
+.controls .control-input.checkbox-input input[type='checkbox'],
+.full-width .control-input.checkbox-input input[type='checkbox'] {
+  width: 10.8px;
+  height: 10.8px;
+  margin: 0;
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+.controls .control-input.checkbox-input span,
+.full-width .control-input.checkbox-input span {
+  font-size: 8px;
+  font-weight: 402;
+  color: #2d3748;
+  line-height: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  cursor: pointer;
+  user-select: none;
+}
+body.dark-theme .controls .control-input.checkbox-input span,
+body.dark-theme .full-width .control-input.checkbox-input span {
+  color: #e2e8f0;
+}
+.full-width {
+  width: 100%;
+  margin-top: 6.7px;
+  margin-bottom: 10.1px;
+  display: block;
+}
+.full-width .control-group {
+  width: 100%;
+}
+.full-width .control-input {
+  width: 100%;
+}
+.digit-selection {
+  background: #fff;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 6.7px;
+  padding: 8px;
+  margin-bottom: 10.1px;
+}
+body.dark-theme .digit-selection {
+  background: #2d3748;
+  border-color: #718096;
+}
+.digit-selection h3 {
+  margin: 0 0 6.7px 0;
+  font-size: 8.7px;
+  font-weight: 470;
+  color: #2d3748;
+  letter-spacing: 0.4px;
+  text-align: center;
+}
+body.dark-theme .digit-selection h3 {
+  color: #e2e8f0;
+}
+.mistik-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6.7px;
+  align-items: stretch;
+}
+.mistik-item {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5.4px;
+  padding: 4.1px 4.1px;
+  border: 1.1px solid #e5e7eb;
+  background: #f8fafc;
+  border-radius: 8px;
+  box-shadow: 0 0.67px 0 rgba(0, 0, 0, 0.03), 0 5.4px 12.1px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: transform 0.05s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.operasi {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  text-align: center;
+}
+body.dark-theme .operasi {
+  border-top-color: rgba(226, 232, 240, 0.25);
+}
+.operasi-title {
+  font-size: 8.7px;
+  font-weight: 650;
+  letter-spacing: 0.3px;
+  opacity: 0.9;
+  text-align: center;
+}
+.operasi-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 6.7px;
+}
+.operasi-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6.7px;
+}
+#opsControls.operasi-ops,
+#opsControls {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 6.7px;
+}
+  #jFamilyControls{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6.7px;
+  }
+  #jFamilyControls .jfamily-row{
+    display:flex;
+    justify-content:center;
+    align-items:stretch;
+    gap:6.7px;
+    flex-wrap:nowrap;
+  }
+  @media (max-width: 360px){
+    #jFamilyControls .jfamily-row{ flex-wrap:wrap; }
+  }
+  #jFamilyControls .mistik-item{
+    width: auto;
+    min-width: 0;
+    padding: 3px 8px;
+    border-radius: 6.7px;
+    gap: 4.8px;
+    box-shadow: 0 0.67px 0 rgba(0, 0, 0, 0.02), 0 4px 9.4px rgba(0, 0, 0, 0.05);
+  }
+  #jFamilyControls .mistik-item span{
+    font-size: 8.7px;
+    letter-spacing: 0.15px;
+  }
+  #jFamilyControls .mistik-item input[type='checkbox']{
+    width: 9.4px;
+    height: 9.4px;
+  }
+  #jFamilyControls .jfamily-row{
+    gap: 6px;
+  }
+#opsControls .mistik-item {
+  width: auto;
+  min-width: 62px;
+}
+.mistik-final {
+  width: auto;
+  min-width: 160px;
+}
+.mistik-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 0.67px 0 rgba(0, 0, 0, 0.03), 0 6.7px 14.8px rgba(0, 0, 0, 0.08);
+}
+.mistik-item:active {
+  transform: translateY(1px);
+}
+.mistik-item input[type='checkbox'] {
+  width: 10.8px;
+  height: 10.8px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: #2563eb;
+}
+.mistik-item span {
+  font-size: 10.1px;
+  font-weight: 536;
+  color: #111827;
+  letter-spacing: 0.2px;
+}
+body.dark-theme .mistik-item {
+  background: #1f2937;
+  border-color: #374151;
+  box-shadow: 0 0.67px 0 rgba(0, 0, 0, 0.15), 0 6.7px 16.1px rgba(0, 0, 0, 0.35);
+}
+body.dark-theme .mistik-item:hover {
+  border-color: #4b5563;
+}
+body.dark-theme .mistik-item span {
+  color: #e5e7eb;
+}
+.button-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6.7px;
+  margin-top: 6.7px;
+  margin-bottom: 10.1px;
+}
+.action-button {
+  padding: 8px 9.4px;
+  border: none;
+  border-radius: 5.4px;
+  font-size: 8.7px;
+  font-weight: 402;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4.1px;
+  color: white;
+  min-height: 30.2px;
+}
+.action-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 2.7px 6.7px rgba(0, 0, 0, 0.12);
+}
+.action-button:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+.btn-search {
+  background: linear-gradient(135deg,
+#FF4081 0%,
+#F50057 25%,
+#C51162 50%,
+#F50057 75%,
+#FF4081 100%);
+  color: #fff;
+  grid-column: 1 / -1 !important;
+  animation: holographic 3s infinite;
+}
+.btn-stop {
+  background: linear-gradient(135deg,
+#7B1FA2 0%,
+#9C27B0 25%,
+#BA68C8 50%,
+#9C27B0 75%,
+#7B1FA2 100%);
+  color: #fff;
+  animation: holographic 3s infinite reverse;
+}
+.btn-continue {
+  background: linear-gradient(135deg,
+#0D47A1 0%,
+#1565C0 25%,
+#1976D2 50%,
+#1565C0 75%,
+#0D47A1 100%);
+  color: #fff;
+  animation: holographic 3s infinite;
+}
+.btn-reset {
+  background: linear-gradient(135deg, #37474F, #455A64);
+  color: #fff;
+}
+.btn-summary {
+  background: linear-gradient(135deg,
+#FF4081 0%,
+#F50057 25%,
+#C51162 50%,
+#F50057 75%,
+#FF4081 100%);
+  color: #fff;
+  animation: holographic 3s infinite;
+}
+.btn-copy-normal {
+  background: linear-gradient(135deg,
+#7B1FA2 0%,
+#9C27B0 25%,
+#BA68C8 50%,
+#9C27B0 75%,
+#7B1FA2 100%);
+  color: #fff;
+  animation: holographic 3s infinite reverse;
+}
+.btn-copy-multi {
+  background: linear-gradient(135deg,
+#0D47A1 0%,
+#1565C0 25%,
+#1976D2 50%,
+#1565C0 75%,
+#0D47A1 100%);
+  color: #fff;
+  animation: holographic 3s infinite;
+}
+.btn-clear {
+  background: linear-gradient(135deg, #37474F, #455A64);
+  color: #fff;
+}
+.btn-clear-output {
+  background: linear-gradient(135deg, #37474F, #455A64);
+  color: #fff;
+}
+.btn-copy-selected {
+  background: linear-gradient(135deg,
+#43A047 0%,
+#4CAF50 25%,
+#66BB6A 50%,
+#4CAF50 75%,
+#43A047 100%);
+  color: #fff;
+  animation: holographic 3s infinite;
+}
+.btn-copy {
+  background: linear-gradient(135deg, #7B1FA2, #9C27B0);
+  color: #fff;
+}
+@keyframes holographic {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+.auto-continue-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 5.4px;
+  margin: 10.1px 0;
+  padding: 8px;
+  background: white;
+  border-radius: 5.4px;
+  border: 0.67px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+body.dark-theme .auto-continue-checkbox {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.auto-continue-checkbox input[type='checkbox'] {
+  width: 10.8px;
+  height: 10.8px;
+  accent-color: #4caf50;
+  cursor: pointer;
+}
+.auto-continue-checkbox label {
+  font-size: 8px;
+  color: #2d3748;
+  font-weight: 402;
+  cursor: pointer;
+  flex: 1;
+  user-select: none;
+}
+body.dark-theme .auto-continue-checkbox label {
+  color: #e2e8f0;
+}
+.status-info {
+  background: #e3f2fd;
+  border: 0.67px solid #2196f3;
+  border-radius: 6.7px;
+  padding: 10.1px;
+  margin-top: 10.1px;
+  font-size: 8px;
+  line-height: 1.1;
+  color: #0d47a1;
+  transition: all 0.3s ease;
+}
+body.dark-theme .status-info {
+  background: #2d3748;
+  border-color: #667eea;
+  color: #e2e8f0;
+}
+.info-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4.1px;
+  padding-bottom: 4.1px;
+  border-bottom: 0.67px solid rgba(255, 255, 255, 0.1);
+}
+body.dark-theme .info-line {
+  border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+.info-label {
+  color: #1976d2;
+  font-weight: 402;
+  min-width: 113.4px;
+}
+body.dark-theme .info-label {
+  color: #90caf9;
+}
+.info-value {
+  font-weight: bold;
+  text-align: right;
+  flex: 1;
+}
+.info-warning {
+  color: #f44336;
+  font-weight: bold;
+}
+.info-success {
+  color: #4caf50;
+  font-weight: bold;
+}
+.result-display {
+  background: #1a202c;
+  color: #e2e8f0;
+  padding: 12.1px;
+  border-radius: 6.7px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  white-space: pre;
+  line-height: 0.94;
+  border: 0.67px solid #2d3748;
+  font-size: 10.1px;
+  overflow-y: auto;
+  height: 335px;
+  margin-bottom: 8.7px;
+  -webkit-overflow-scrolling: touch;
+}
+.result-display::-webkit-scrollbar {
+  width: 5.4px;
+}
+.result-display::-webkit-scrollbar-track {
+  background: #2d3748;
+  border-radius: 2.7px;
+}
+.result-display::-webkit-scrollbar-thumb {
+  background: #4a5568;
+  border-radius: 2.7px;
+}
+.result-display::-webkit-scrollbar-thumb:hover {
+  background: #718096;
+}
+body.dark-theme .result-display {
+  background: #1a202c;
+  border-color: #4a5568;
+}
+.result-table-container {
+  margin-top: 8px;
+  max-height: 234.5px;
+  overflow-y: auto;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 5.4px;
+  background: #fff;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+body.dark-theme .result-table-container {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.result-panel {
+  margin-top: 8px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 5.4px;
+  background: #fff;
+  overflow: hidden;
+  overflow-anchor: none;
+}
+body.dark-theme .result-panel {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.result-panel .bom-wrap {
+  border-top: 0;
+}
+.result-panel .bom-wrap,
+.result-panel .freq1d-wrap,
+.result-panel .result-table-container {
+  margin: 0;
+  border: 0;
+  border-top: 0.67px solid #e2e8f0;
+  border-radius: 0;
+  background: transparent;
+  overflow-anchor: none;
+}
+body.dark-theme .result-panel .bom-wrap,
+body.dark-theme .result-panel .freq1d-wrap,
+body.dark-theme .result-panel .result-table-container {
+  border-top-color: #4a5568;
+}
+.result-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.7px;
+}
+.result-table-container th,
+.result-table-container td {
+  padding: 4.1px 5.4px;
+  text-align: center;
+  border-bottom: 0.67px solid #e2e8f0;
+}
+body.dark-theme .result-table-container th,
+body.dark-theme .result-table-container td {
+  border-bottom-color: #4a5568;
+  color: #e2e8f0;
+}
+.result-table-container th {
+  background: #f1f5f9;
+  font-weight: 470;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+body.dark-theme .result-table-container th {
+  background: #4a5568;
+}
+.calc-table-container {
+  margin-top: 8px;
+  max-height: 234.5px;
+  overflow-y: auto;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 5.4px;
+  background: #fff;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+body.dark-theme .calc-table-container {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.calc-table-container table,
+.calc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.7px;
+}
+.calc-table-container th,
+.calc-table-container td,
+.calc-table th,
+.calc-table td {
+  padding: 4.1px 5.4px;
+  text-align: center;
+  border-bottom: 0.67px solid #e2e8f0;
+  background: transparent !important; 
+}
+body.dark-theme .calc-table-container th,
+body.dark-theme .calc-table-container td,
+body.dark-theme .calc-table th,
+body.dark-theme .calc-table td {
+  border-bottom-color: #4a5568;
+  color: #e2e8f0;
+}
+.calc-table-container th,
+.calc-table th {
+  background: #f1f5f9 !important; 
+  font-weight: 470;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+body.dark-theme .calc-table-container th,
+body.dark-theme .calc-table th {
+  background: #4a5568 !important;
+}
+.bom-wrap {
+  margin: 0;
+  max-height: 220px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
+}
+.bom-wrap.hidden { display: none !important; }
+.bom-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 8.7px;
+}
+.bom-table th,
+.bom-table td {
+  padding: 4.1px 5.4px;
+  text-align: center;
+  border-bottom: 0.67px solid #e2e8f0;
+}
+.bom-table th {
+  background: #f1f5f9;
+  font-weight: 470;
+}
+.bom-table td.kategori {
+  font-weight: 700;
+  text-align: left;
+}
+.bom-table td.angka {
+  line-height: 1.55;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+.bom-table td.banyak { white-space: nowrap; }
+body.dark-theme .bom-table th,
+body.dark-theme .bom-table td {
+  border-bottom-color: #4a5568;
+  color: #e2e8f0;
+}
+body.dark-theme .bom-table th { background: rgba(255, 255, 255, 0.06); }
+.freq1d-wrap {
+  margin: 0;
+  max-height: 180px;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  overflow-anchor: none;
+}
+.freq1d-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 8.7px;
+}
+.freq1d-table th,
+.freq1d-table td {
+  padding: 4.1px 5.4px;
+  text-align: center;
+  border-bottom: 0.67px solid #e2e8f0;
+}
+.freq1d-table th {
+  background: #f1f5f9;
+  font-weight: 470;
+}
+body.dark-theme .freq1d-table th,
+body.dark-theme .freq1d-table td {
+  border-bottom-color: #4a5568;
+  color: #e2e8f0;
+}
+body.dark-theme .freq1d-table th { background: rgba(255, 255, 255, 0.06); }
+.freq1d-table th {
+  position: static !important;
+  top: auto !important;
+}
+.result-table-container input[type='checkbox'] {
+  width: 10.8px;
+  height: 10.8px;
+  accent-color: #2563eb;
+}
+.result-table-empty {
+  text-align: center;
+  padding: 13.4px;
+  color: #888;
+  font-style: italic;
+}
+.rangkum-top {
+  margin-top: 10.8px;
+  margin-bottom: 8px;
+}
+.rangkum-top .action-button {
+  width: 100%;
+}
+.output-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6.7px;
+  margin-top: 10.8px;
+}
+.output-buttons .btn-summary {
+  grid-column: 1 / -1;
+}
+.notification {
+  position: fixed;
+  top: 6.7px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  color: white;
+  padding: 8px 12.1px;
+  border-radius: 6.7px;
+  box-shadow: 0 5.4px 16.8px rgba(0, 0, 0, 0.2);
+  z-index: 999999;
+  opacity: 0;
+  font-weight: 402;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5.4px;
+  font-size: 8.7px;
+  min-width: unset;
+  max-width: calc(100% - 13.4px);
+  text-align: center;
+  border-left: 2.7px solid #1b5e20;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  margin: 0 auto;
+  contain: paint;
+  isolation: isolate;
+  will-change: opacity, transform;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notification.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.notification.hide {
+  opacity: 0;
+}
+.notification.error {
+  background: linear-gradient(135deg, #f44336, #c62828);
+  border-left-color: #b71c1c;
+}
+.notification.warning {
+  background: linear-gradient(135deg, #ff9800, #ef6c00);
+  border-left-color: #e65100;
+}
+.notification.info {
+  background: linear-gradient(135deg, #2196f3, #1565c0);
+  border-left-color: #0d47a1;
+}
+.notification.success {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+  border-left-color: #1b5e20;
+}
+.notification::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 0 0 6.7px 6.7px;
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.notification.show::after {
+  animation: progressBar 5s linear forwards;
+}
+@keyframes progressBar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+.footer {
+  text-align: center;
+  margin-top: 13.4px;
+  padding-top: 10.1px;
+  border-top: 0.67px solid #e9ecef;
+  color: #718096;
+  font-size: 8px;
+  line-height: 1.1;
+}
+body.dark-theme .footer {
+  border-top-color: #4a5568;
+  color: #a0aec0;
+}
+.version {
+  font-weight: bold;
+  color: #667eea;
+  font-size: 8.7px;
+}
+body.dark-theme .version {
+  color: #90caf9;
+}
+.hidden {
+  display: none !important;
+}
+#resultOutput {
+  margin-bottom: 9.4px;
+  margin-top: 10px;
+}
+#formulaTableWrap {
+  margin-top: 8px;
+  margin-bottom: 6.7px;
+}
+#liveFindingsWrap {
+  margin-bottom: 14.8px;
+}
+#liveFindings {
+  margin-bottom: 14.8px;
+}
+.hasil-lengkap-title {
+  margin-top: 20px;
+  margin-bottom: 11px;
+}
+.output-empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 361.8;
+  height: 100%;
+  padding: 16.1px;
+  box-sizing: border-box;
+}
+.output-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6.7px;
+  opacity: 0.72;
+}
+.output-empty-icon {
+  font-size: 37.7px;
+  line-height: 1;
+  opacity: 0.55;
+  filter: grayscale(0.05);
+}
+.output-empty-text {
+  font-size: 10.1px;
+  line-height: 1.1;
+  color: #334155;
+}
+.output-empty-text strong {
+  font-weight: 536;
+}
+body.dark-theme .output-empty-text {
+  color: #64748b;
+}
+#resultOutput.output-mode-empty {
+  white-space: normal !important;
+  font-family: inherit !important;
+}
+.form-group,
+.input-group {
+  margin-bottom: 12px !important;
+}
+.form-group label,
+.input-label {
+  margin-bottom: 6px !important;
+  line-height: 1.4 !important;
+}
+.form-group input,
+.form-group select,
+.form-group textarea,
+.input-group input,
+.input-group select,
+.input-group textarea {
+  padding: 10px 12px !important;
+  line-height: 1.5 !important;
+}
+.output-summary,
+.result-summary,
+.info-box {
+  line-height: 1.6 !important;
+}
+.output-summary div,
+.result-summary div,
+.info-box div {
+  margin-bottom: 6px !important;
+}
+textarea,
+.result-display,
+.result-output {
+  line-height: 1.3 !important;
+  padding: 10px !important;
+}
+:root {
+  --label-fw: 700;
+  --value-fw: 600;
+}
+.form-group label,
+.input-label,
+.control-label,
+.section-title,
+h1,
+h2,
+h3 {
+  font-weight: var(--label-fw) !important;
+}
+.stat-label {
+  font-weight: 700 !important;
+}
+.stat-value {
+  font-weight: var(--value-fw) !important;
+}
+.form-group,
+.input-group {
+  margin-bottom: 10px !important;
+}
+.form-group label,
+.input-label {
+  margin-bottom: 4px !important;
+  line-height: 1.35 !important;
+}
+.form-group input,
+.form-group select,
+.form-group textarea,
+.input-group input,
+.input-group select,
+.input-group textarea {
+  padding: 8px 10px !important;
+  line-height: 1.45 !important;
+}
+textarea {
+  min-height: 120px !important;
+  height: 120px !important;
+  max-height: 120px !important;
+  resize: vertical !important;
+}
+.result-display,
+.result-output {
+  line-height: 1.3 !important;
+  padding: 10px !important;
+}
+.mistik-title {
+  font-weight: 800 !important;
+  letter-spacing: 0.2px;
+}
+.mistik-item {
+  font-weight: 800 !important;
+}
+.mistik-item span {
+  font-weight: 800 !important;
+}
+.pred-suffix {
+  font-weight: 600;
+  opacity: 0.9;
+}
+.pred-plain {
+  color: inherit;
+  font-weight: 600;
+}
+.pred-symbol { font-weight: 800; margin-left: 4px; }
+.pred-summary { display: inline-block; margin-top: 4px; font-weight: 700; }
+.hit-digit {
+  color: #e53e3e;
+  font-weight: 800;
+}
+.live-table td.live-pred-cell {
+    font-weight: 600;
+  color: inherit;
+  white-space: nowrap;
+}
+body.dark-theme .live-table td.live-pred-cell {
+  color: #feb2b2;
+}
+.live-ok{display:none;}
+body.dark-theme .live-ok{display:none;}
+.pred-ggbk-label {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif !important;
+  font-weight: 700;
+  font-size: 0.95em;
+  letter-spacing: 0;
+  opacity: 0.95;
+  margin-left: 2px;
+  color: inherit;
+  white-space: nowrap;
+}
+.poltAR-render, .poltar-render { width: 100%; }
+.poltAR-render *, .poltar-render * { box-sizing: border-box; }
+.poltAR-render .poltar-block, .poltar-render .poltar-block {
+  margin-bottom: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+body.dark-theme .poltar-render .poltar-block { background: transparent; }
+.poltAR-render .poltar-title, .poltar-render .poltar-title {
+  font-weight: 700;
+  margin: 0;
+}
+.poltAR-render .poltar-sub, .poltar-render .poltar-sub {
+  opacity: 0.95;
+  margin: 0 0 6px 0;
+}
+.poltAR-render .poltar-lines, .poltar-render .poltar-lines {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre;
+}
+.poltAR-render .poltar-tables, .poltar-render .poltar-tables { margin-top: 8px; display: grid; gap: 10px; }
+.poltAR-render table.poltAR-ringkas-table, .poltar-render table.poltar-ringkas-table,
+.poltAR-render table.poltAR-main-table, .poltar-render table.poltar-main-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.poltAR-render table.poltAR-ringkas-table th, .poltar-render table.poltar-ringkas-table th,
+.poltAR-render table.poltAR-ringkas-table td, .poltar-render table.poltar-ringkas-table td,
+.poltAR-render table.poltAR-main-table th, .poltar-render table.poltar-main-table th,
+.poltAR-render table.poltAR-main-table td, .poltar-render table.poltar-main-table td {
+  padding: 8px 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  text-align: center;
+  font-size: 13px;
+}
+body.dark-theme .poltar-render table.poltar-ringkas-table th,
+body.dark-theme .poltar-render table.poltar-ringkas-table td,
+body.dark-theme .poltar-render table.poltar-main-table th,
+body.dark-theme .poltar-render table.poltar-main-table td {
+  border-color: rgba(255,255,255,0.10);
+}
+.poltAR-render table.poltAR-main-table td:nth-child(2), .poltar-render table.poltar-main-table td:nth-child(2) {
+  text-align: left;
+  word-break: break-word;
+}
+.poltAR-tables-outside, .poltar-tables-outside {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+.poltAR-tables-outside.hidden, .poltar-tables-outside.hidden { display: none !important; }
+.poltAR-tables-outside .result-table-container, .poltar-tables-outside .result-table-container{
+  max-height: none;
+  overflow: visible;
+}
+.poltAR-tables-outside table.poltar-main-table td:nth-child(2),
+.poltar-tables-outside table.poltar-main-table td:nth-child(2){
+  text-align: left;
+  white-space: normal;
+  word-break: break-word;
+}
+.poltAR-tables-outside table, .poltar-tables-outside table { width: 100%; border-collapse: collapse; }
+.poltAR-tables-outside .poltar-ringkas-wrap, .poltar-tables-outside .poltar-ringkas-wrap { overflow-x: auto; }
+.poltAR-tables-outside .poltar-table-wrap, .poltar-tables-outside .poltar-table-wrap { overflow-x: auto; }
+.result-display.poltAR-mode, .result-display.poltar-mode { white-space: pre !important; font-family: 'Consolas','Courier New',monospace !important; font-size: 10.1px !important; line-height: 0.94 !important; }
+.result-display.poltAR-mode .poltar-lines, .result-display.poltar-mode .poltar-lines { font-size: 10.1px !important; line-height: 0.94 !important; }
+@media (min-width: 900px) {
+  body {
+    padding: 16px;
+  }
+  .main-container {
+    max-width: 1220px;
+    padding: 16px;
+  }
+  .main-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+  }
+  .input-section,
+.output-section {
+    align-self: start;
+  }
+  .result-display {
+    height: 520px;
+  }
+  #liveFindingsWrap {
+    max-height: 220px;
+  }
+  .status-info {
+    margin-top: 12px;
+  }
+}
+@media (max-width: 765.4px) {
+  body {
+    padding: 5.4px;
+  }
+  .main-container {
+    padding: 10.1px;
+    border-radius: 8px;
+  }
+  .header h1 {
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+  }
+  }
+  .input-section,
+.output-section {
+    padding: 10.1px;
+  }
+  .result-display {
+    height: 335px;
+    font-size: 8.7px;
+  }
+  .data-stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .button-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .btn-search {
+    grid-column: 1 / -1 !important;
+  }
+  .output-buttons {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6.7px;
+  }
+  .data-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6.1px;
+  }
+  .stat-box {
+    padding: 4.5px;
+  }
+  .stat-label {
+    font-size: 8px;
+    letter-spacing: 0.3px;
+  }
+  .stat-value {
+    font-size: 10px;
+  }
+  .header h1 {
+    font-size: 1.05rem;
+    letter-spacing: 1.5px;
+  }
+  .button-group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .btn-search,
+.btn-stop {
+    grid-column: span 1;
+  }
+}
+@media (max-width: 360px) {
+  .controls {
+    grid-template-columns: 1fr;
+  }
+  .data-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .controls {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .data-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+  .stat-box {
+    min-width: 0 !important;
+    padding: 4.5px !important;
+  }
+  .stat-label {
+    font-size: 8px !important;
+  }
+  .stat-value {
+    font-size: 10px !important;
+  }
+}
+.multi-dd {
+  position: relative;
+  width: 100%;
+}
+.multi-dd-btn {
+  width: 100%;
+  padding: 4.1px 5.4px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 4.1px;
+  background: #fff;
+  font-size: 8px;
+  font-weight: 402;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6.7px;
+  height: 22.8px;
+  min-height: 22.8px;
+}
+body.dark-theme .multi-dd-btn {
+  background: #2d3748;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+.multi-dd-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.multi-dd-panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  background: #fff;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 6.7px;
+  box-shadow: 0 6.7px 16.7px rgba(0, 0, 0, 0.12);
+  padding: 6px;
+  z-index: 9999;
+  display: none;
+  max-height: 190px;
+  overflow: auto;
+}
+body.dark-theme .multi-dd-panel {
+  background: #2d3748;
+  border-color: #718096;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+.multi-dd.open .multi-dd-panel {
+  display: block;
+}
+.multi-dd-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+}
+@media (max-width: 520px) {
+  .multi-dd-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+.multi-dd-item {
+  display: flex;
+  align-items: center;
+  gap: 5.4px;
+  padding: 4.1px 4.1px;
+  border: 0.67px solid #e2e8f0;
+  background: #fff;
+  border-radius: 6.7px;
+  cursor: pointer;
+  user-select: none;
+}
+body.dark-theme .multi-dd-item {
+  background: #1f2937;
+  border-color: #374151;
+}
+.multi-dd-item input {
+  width: 10.8px;
+  height: 10.8px;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: #2563eb;
+}
+.multi-dd-item span {
+  font-size: 9.4px;
+  font-weight: 600;
+  color: #2d3748;
+  line-height: 1.1;
+}
+body.dark-theme .multi-dd-item span {
+  color: #e5e7eb;
+}
+.multi-dd-sep {
+  grid-column: 1 / -1;
+  font-size: 9px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-align: center;
+  padding: 4px 0 2px;
+  margin: 2px 0;
+  border-top: 1px solid #e2e8f0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  pointer-events: none;
+  user-select: none;
+}
+body.dark-theme .multi-dd-sep {
+  color: #6b7280;
+  border-top-color: #374151;
+}
+#lanjutanWrap { display: none; }
+#lanjutanWrap[style*="contents"] { display: contents; }
+.komp-lainnya-toggle {
+  grid-column: 1 / -1;
+  text-align: center;
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: 700;
+  color: #4f46e5;
+  padding: 4px 0 2px;
+  margin: 2px 0;
+  user-select: none;
+  letter-spacing: 0.5px;
+}
+body.dark-theme .komp-lainnya-toggle {
+  color: #a5b4fc;
+}
+.mistik-sep-label {
+  grid-column: 1 / -1;
+  font-size: 8px;
+  font-weight: 700;
+  color: #9ca3af;
+  text-align: center;
+  padding: 4px 0 2px;
+  margin: 2px 0;
+  border-top: 1px dashed #e2e8f0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  user-select: none;
+}
+body.dark-theme .mistik-sep-label {
+  color: #6b7280;
+  border-top-color: #374151;
+}
+.mistik-sec-all {
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+}
+body.dark-theme .mistik-sec-all {
+  background: #1e1b4b !important;
+  border-color: #3730a3 !important;
+}
+.mistik-sec-all span {
+  color: #4f46e5 !important;
+  font-weight: 700 !important;
+}
+.multi-dd-sec-toggle {
+  background: #eef2ff !important;
+  border-color: #c7d2fe !important;
+}
+body.dark-theme .multi-dd-sec-toggle {
+  background: #1e1b4b !important;
+  border-color: #3730a3 !important;
+}
+.multi-dd-sec-toggle span {
+  color: #4f46e5 !important;
+}
+body.dark-theme .multi-dd-sec-toggle span {
+  color: #a5b4fc !important;
+}
+.multi-dd-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6.7px;
+  margin-top: 6px;
+  padding: 4.1px 4.1px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 6.7px;
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+body.dark-theme .multi-dd-toggle {
+  background: #1f2937;
+  border-color: #374151;
+}
+.multi-dd-toggle input {
+  width: 10.8px;
+  height: 10.8px;
+  margin: 0;
+  accent-color: #2563eb;
+}
+.multi-dd-toggle span {
+  font-size: 9.4px;
+  font-weight: 700;
+  color: #2d3748;
+}
+body.dark-theme .multi-dd-toggle span {
+  color: #e5e7eb;
+}
+:root {
+  --ui-zoom: 1;
+}
+.main-container {
+  zoom: var(--ui-zoom);
+}
+@supports not (zoom: 1) {
+  .main-container {
+    transform: scale(var(--ui-zoom));
+    transform-origin: top center;
+  }
+}
+.zoom-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1000001;
+  margin: 0;
+  text-align: initial;
+  display: flex;
+  flex-direction: column;
+  gap: 6.7px;
+}
+.zoom-toggle button {
+  width: 29.5px;
+  height: 29.5px;
+  padding: 0;
+  border-radius: 770px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  font-size: 12.1px;
+  font-weight: 470;
+  color: #fff;
+  background: linear-gradient(135deg, #4a5568, #718096);
+  box-shadow: 0 5.4px 12.1px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.zoom-toggle button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6.7px 14.8px rgba(0, 0, 0, 0.22);
+}
+.zoom-toggle button:active:not(:disabled) {
+  transform: translateY(0px);
+  box-shadow: 0 4.1px 9.4px rgba(0, 0, 0, 0.18);
+}
+.zoom-toggle button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 4.1px 9.4px rgba(0, 0, 0, 0.12) !important;
+}
+body.dark-theme .zoom-toggle button {
+  background: linear-gradient(135deg, #4a5568, #718096);
+}
+.riwayat-toggle {
+  position: fixed;
+  top: calc(10px + 29.5px + 8px);
+  right: 10px;
+  z-index: 1000001;
+}
+.riwayat-toggle button {
+  width: 29.5px;
+  height: 29.5px;
+  padding: 0;
+  border-radius: 770px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 5.4px 12.1px rgba(0,0,0,0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+.riwayat-toggle button:hover { transform: translateY(-1px); box-shadow: 0 6.7px 14.8px rgba(0,0,0,0.22); }
+.riwayat-toggle button:active { transform: translateY(0); box-shadow: 0 4.1px 9.4px rgba(0,0,0,0.18); }
+body.dark-theme .riwayat-toggle button { background: linear-gradient(135deg, #667eea, #764ba2); }
+.riwayat-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: #e53e3e; color: #fff;
+  font-size: 8px; font-weight: 700;
+  border-radius: 999px; min-width: 14px; height: 14px;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 2px; pointer-events: none;
+}
+#riwayatOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 2000000;
+  align-items: center; justify-content: center;
+  padding: 10px;
+}
+#riwayatOverlay.open { display: flex; }
+#riwayatModal {
+  background: #fff; border-radius: 14px;
+  width: 100%; max-width: 600px; max-height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
+}
+body.dark-theme #riwayatModal { background: #2d3748; color: #e2e8f0; }
+.riwayat-modal-header {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}
+body.dark-theme .riwayat-modal-header { border-color: #4a5568; }
+.riwayat-modal-header h2 { font-size: 15px; font-weight: 700; flex: 1; margin: 0; }
+.riwayat-modal-close {
+  width: 28px; height: 28px; border-radius: 999px;
+  border: none; background: #f1f5f9; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; flex-shrink: 0;
+}
+.riwayat-modal-close:hover { background: #e2e8f0; }
+body.dark-theme .riwayat-modal-close { background: #4a5568; color: #e2e8f0; }
+body.dark-theme .riwayat-modal-close:hover { background: #718096; }
+.riwayat-toolbar {
+  padding: 10px 14px 8px;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0; border-bottom: 1px solid #f1f5f9;
+}
+body.dark-theme .riwayat-toolbar { border-color: #4a5568; }
+.riwayat-count-info { flex: 1; font-size: 11px; color: #6b7280; }
+body.dark-theme .riwayat-count-info { color: #a0aec0; }
+.btn-hapus-semua {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  border: none; background: #fff1f0; color: #e53e3e;
+  cursor: pointer; font-weight: 600; transition: background 0.15s;
+}
+.btn-hapus-semua:hover { background: #ffe4e4; }
+body.dark-theme .btn-hapus-semua { background: #742a2a; color: #fc8181; }
+.riwayat-list {
+  flex: 1; overflow-y: auto;
+  padding: 10px 12px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.riwayat-empty { text-align: center; color: #a0aec0; font-size: 13px; margin: 40px auto; }
+.riwayat-card { border: 1px solid #e9ecef; border-radius: 10px; overflow: hidden; transition: box-shadow 0.15s; }
+.riwayat-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+body.dark-theme .riwayat-card { border-color: #4a5568; }
+.riwayat-card-header {
+  padding: 9px 12px; background: #f8fafc;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer; user-select: none;
+}
+body.dark-theme .riwayat-card-header { background: #1a202c; }
+.riwayat-card-title { flex: 1; font-size: 12px; font-weight: 700; color: #2d3748; }
+body.dark-theme .riwayat-card-title { color: #e2e8f0; }
+.riwayat-card-meta { font-size: 11px; color: #6b7280; }
+body.dark-theme .riwayat-card-meta { color: #a0aec0; }
+.riwayat-card-badges { display: flex; gap: 5px; align-items: center; }
+.riwayat-badge-target { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: #ebf4ff; color: #3182ce; }
+body.dark-theme .riwayat-badge-target { background: #2a4365; color: #90cdf4; }
+.riwayat-badge-found { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: #f0fff4; color: #38a169; }
+body.dark-theme .riwayat-badge-found { background: #1c4532; color: #68d391; }
+.riwayat-badge-expand { font-size: 12px; color: #a0aec0; transition: transform 0.2s; }
+.riwayat-card.expanded .riwayat-badge-expand { transform: rotate(180deg); }
+.riwayat-card-body {
+  display: none; padding: 10px 12px;
+  border-top: 1px solid #f1f5f9;
+  font-size: 11px; color: #4a5568;
+}
+body.dark-theme .riwayat-card-body { border-color: #4a5568; color: #cbd5e0; }
+.riwayat-card.expanded .riwayat-card-body { display: block; }
+.riwayat-card-settings { margin-bottom: 8px; display: flex; flex-wrap: wrap; gap: 5px; }
+.riwayat-setting-chip { font-size: 10px; padding: 2px 8px; border-radius: 999px; background: #edf2f7; color: #4a5568; }
+body.dark-theme .riwayat-setting-chip { background: #4a5568; color: #e2e8f0; }
+.riwayat-card-actions { display: flex; gap: 7px; margin-top: 8px; }
+.btn-lihat-output, .btn-hapus-card {
+  font-size: 11px; padding: 4px 10px; border-radius: 6px;
+  border: none; cursor: pointer; font-weight: 600; transition: background 0.15s;
+}
+.btn-lihat-output { background: #ebf4ff; color: #3182ce; }
+.btn-lihat-output:hover { background: #bee3f8; }
+body.dark-theme .btn-lihat-output { background: #2a4365; color: #90cdf4; }
+body.dark-theme .btn-lihat-output:hover { background: #2c5282; }
+.btn-hapus-card { background: #fff1f0; color: #e53e3e; }
+.btn-hapus-card:hover { background: #ffe4e4; }
+body.dark-theme .btn-hapus-card { background: #742a2a; color: #fc8181; }
+body.dark-theme .result-table-container table,
+body.dark-theme .result-table-container .live-table,
+body.dark-theme #resultTable,
+body.dark-theme .freq1d-table,
+body.dark-theme .bom-table {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+body.dark-theme .result-table-container tbody tr,
+body.dark-theme .result-table-container td,
+body.dark-theme .result-table-container th {
+  background: transparent;
+}
+body.dark-theme .result-table-container tbody tr:nth-child(odd) td {
+  background: rgba(255, 255, 255, 0.03);
+}
+body.dark-theme .result-table-container tbody tr:nth-child(even) td {
+  background: rgba(0, 0, 0, 0.10);
+}
+body.dark-theme .result-table-container tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.06);
+}
+body.dark-theme .result-table-container input[type='checkbox'] {
+  filter: brightness(1.1);
+}
+.stat-action-btn span:first-child {
+  font-size: 10px;
+  line-height: 1;
+}
+.stat-action-btn:active {
+  transform: translateY(1px);
+}
+.stat-action-btn:focus {
+  outline: none;
+}
+.stat-action-btn span:first-child {
+  font-size: 10px;
+  line-height: 1;
+}
+.input-action-row .stat-action-btn {
+  flex: 1 1 0;
+  white-space: nowrap;
+}
+.stat-action-btn {
+  appearance: none;
+  width: 100%;
+  border: 0.67px solid #e2e8f0;
+  background: white;
+  border-radius: 4.1px;
+  padding: 3px 6px;
+  min-height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 8px;
+  color: #718096;
+  font-weight: 402;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  user-select: none;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.stat-action-btn span:first-child {
+  font-size: 10px;
+  line-height: 1;
+}
+body.dark-theme .stat-action-btn {
+  background: #2d3748;
+  border-color: #4a5568;
+  color: #a0aec0;
+  box-shadow: none;
+}
+.input-action-row {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+.input-action-row > button,
+.input-action-row > .stat-action-btn {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  
+width: auto !important;
+}
+.tabs {
+  display: flex;
+  gap: 6.7px;
+  margin: 0 0 10.1px 0;
+  padding: 6.7px;
+  border-radius: 8px;
+  border: 0.67px solid #e2e8f0;
+  background: #fff;
+}
+body.dark-theme .tabs {
+  background: #2d3748;
+  border-color: #4a5568;
+}
+.tabbar{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:0;
+  padding: 0 6.7px;
+  background:#ffffff;
+  border:0.67px solid #e2e8f0;
+  border-radius: 10px;
+  width:100%;
+}
+body.dark-theme .tabbar{
+  background:#2d3748;
+  border-color:#4a5568;
+}
+.tab-btn{
+  flex:1 1 0;
+  border:none;
+  background:transparent;
+  color:#94a3b8;
+  border-radius: 8px;
+  padding: var(--tab-pad-y) var(--tab-pad-x);
+  cursor:pointer;
+  font-size: var(--tab-font);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  user-select:none;
+  position:relative;
+  transition: color 0.12s ease, transform 0.12s ease;
+}
+body.dark-theme .tab-btn{ color:#94a3b8; }
+.tab-btn:hover{ transform: translateY(-1px); color:#64748b; }
+body.dark-theme .tab-btn:hover{ color:#cbd5e1; }
+.tab-btn.active{
+  color:#2563eb;
+}
+body.dark-theme .tab-btn.active{
+  color:#93c5fd;
+}
+.tab-btn.active::after{
+  content:"";
+  position:absolute;
+  left:18%;
+  right:18%;
+  bottom:2px;
+  height:3px;
+  border-radius: 3px;
+  background:#2563eb;
+}
+body.dark-theme .tab-btn.active::after{ background:#60a5fa; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.formula-input textarea {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  border: 0.67px solid #e2e8f0;
+  border-radius: 6.7px;
+  font-size: 10px;
+  resize: vertical;
+  margin-top: 6px;
+  font-family: 'Courier New', monospace;
+  transition: all 0.3s ease;
+  background: white;
+  color: #333;
+  line-height: 1.3;
+}
+body.dark-theme .formula-input textarea {
+  background: #2d3748;
+  border-color: #718096;
+  color: #e2e8f0;
+}
+.formula-input textarea:focus {
+  border-color: #667eea;
+  outline: none;
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.1);
+}
+body.dark-theme .formula-input textarea:focus {
+  box-shadow: 0 0 0 1.4px rgba(102, 126, 234, 0.2);
+}
+.button-group.single-col {
+  grid-template-columns: 1fr !important;
+}
+.button-group.single-col .action-button {
+  grid-column: 1 / -1 !important;
+}
+#calcResultTable th:nth-child(1),
+#calcResultTable td:nth-child(1),
+#calcResultTable th:nth-child(6),
+#calcResultTable td:nth-child(6) {
+  display: none;
+}
+.rot-digit{display:inline-block;font-weight:800;letter-spacing:0.2px}
+.rot-sep{opacity:0.7;margin:0 4px;display:inline-block}
+.d0{color:#94a3b8}
+.d1{color:#22c55e}
+.d2{color:#06b6d4}
+.d3{color:#3b82f6}
+.d4{color:#a855f7}
+.d5{color:#f59e0b}
+.d6{color:#ef4444}
+.d7{color:#f97316}
+.d8{color:#14b8a6}
+.d9{color:#e11d48}
+body.dark-theme .d0{color:#cbd5e1}
+.mistik-item,
+.multi-dd-item,
+.control-group input,
+.control-group select,
+.stat-action-btn,
+.action-button {
+  font-size: 8.5px !important;
+}
+.mistik-item,
+.multi-dd-item {
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  gap: 4px !important;
+}
+.mistik-item input[type='checkbox'],
+.multi-dd-item input[type='checkbox'] {
+  width: 9px !important;
+  height: 9px !important;
+}
+.operasi-pills,
+.multi-dd-grid {
+  gap: 5px !important;
+}
+.action-button {
+  min-height: 26px !important;
+  padding: 6px 8px !important;
+}
+.color-selisih{color:#2196f3 !important;font-weight:402;}
+.color-cb{color:#7c3aed !important;font-weight:402;}
+.rot-sep{display:inline-block;padding:0 6px;opacity:0.85;}
+.rot-plain{opacity:0.9;}
+.result-display .poltar-title,
+.result-display .poltar-sub,
+.result-display .poltar-lines,
+.result-display .poltar-block {
+  font-size: 10.1px !important;
+  line-height: 0.94 !important;
+}
+.result-display .poltar-title { margin: 0 !important; font-weight: 700 !important; }
+.result-display .poltar-sub { margin: 0 0 0 0 !important; opacity: 0.95; }
+.result-display .poltar-block { margin-bottom: 0 !important; padding: 0 !important; }
+#poltarTablesOutside { margin-top: 8px; }
+#poltarTablesOutside .result-table-container { margin-top: 8px; }
+#mistikPopupOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 2000001;
+  align-items: center; justify-content: center;
+  padding: 10px;
+}
+#mistikPopupOverlay.open { display: flex; }
+#mistikPopupModal {
+  background: #fff; border-radius: 14px;
+  width: 100%; max-width: 500px; max-height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
+}
+body.dark-theme #mistikPopupModal { background: #2d3748; color: #e2e8f0; }
+#komponenPopupOverlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 2000001;
+  align-items: center; justify-content: center;
+  padding: 10px;
+}
+#komponenPopupOverlay.open { display: flex; }
+#komponenPopupModal {
+  background: #fff; border-radius: 14px;
+  width: 100%; max-width: 500px; max-height: 88vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden;
+}
+body.dark-theme #komponenPopupModal { background: #2d3748; color: #e2e8f0; }
+.popup-hdr {
+  padding: 14px 16px 10px;
+  border-bottom: 1px solid #e9ecef;
+  display: flex; align-items: center; gap: 8px;
+  flex-shrink: 0;
+}
+body.dark-theme .popup-hdr { border-color: #4a5568; }
+.popup-hdr h2 { font-size: 14px; font-weight: 700; flex: 1; margin: 0; }
+.popup-hdr-close {
+  width: 28px; height: 28px; border-radius: 999px;
+  border: none; background: #f1f5f9; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s; flex-shrink: 0; color: #2d3748;
+}
+.popup-hdr-close:hover { background: #e2e8f0; }
+body.dark-theme .popup-hdr-close { background: #4a5568; color: #e2e8f0; }
+body.dark-theme .popup-hdr-close:hover { background: #718096; }
+.popup-body {
+  flex: 1; overflow-y: auto;
+  padding: 12px 14px;
+}
+</style>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="header">
+        <h1>RUMUS OTOMATIS</h1>
+      </div>
+      <div class="notification" id="notification"></div>
+      <div class="theme-toggle">
+        <button id="themeButton">
+          <span id="themeIcon">🌙</span>
+          <span id="themeText">Mode Gelap</span>
+        </button>
+      </div>
+      <div class="zoom-toggle">
+        <button id="zoomIn" title="Perbesar UI">+</button>
+        <button id="zoomOut" title="Perkecil UI">-</button>
+      </div>
+      <div id="mistikPopupOverlay" onclick="if(event.target===this)document.getElementById('mistikPopupOverlay').classList.remove('open')">
+        <div id="mistikPopupModal">
+          <div class="popup-hdr">
+            <h2>🔮 Pilih Mistik Yang Digunakan</h2>
+            <button class="popup-hdr-close" onclick="document.getElementById('mistikPopupOverlay').classList.remove('open')">✕</button>
+          </div>
+          <div class="popup-body">
+            <div id="mistikPopupSlot"></div>
+          </div>
+        </div>
+      </div>
+      <div id="komponenPopupOverlay" onclick="if(event.target===this)document.getElementById('komponenPopupOverlay').classList.remove('open')">
+        <div id="komponenPopupModal">
+          <div class="popup-hdr">
+            <h2>⚙️ Pilih Komponen Yang Digunakan</h2>
+            <button class="popup-hdr-close" onclick="document.getElementById('komponenPopupOverlay').classList.remove('open')">✕</button>
+          </div>
+          <div class="popup-body">
+            <div id="komponenPopupSlot"></div>
+          </div>
+        </div>
+      </div>
+      <div class="riwayat-toggle">
+        <button id="riwayatBtn" title="Riwayat Sesi" onclick="RiwayatManager.openModal()">
+          📋
+          <span class="riwayat-badge" id="riwayatBadge" style="display:none">0</span>
+        </button>
+      </div>
+      <div id="riwayatOverlay" onclick="if(event.target===this) RiwayatManager.closeModal()">
+        <div id="riwayatModal">
+          <div class="riwayat-modal-header">
+            <h2>📋 Riwayat Sesi</h2>
+            <button class="riwayat-modal-close" onclick="RiwayatManager.closeModal()">✕</button>
+          </div>
+          <div class="riwayat-toolbar">
+            <span class="riwayat-count-info" id="riwayatCountInfo">0 run tersimpan (maks 20)</span>
+            <button class="btn-hapus-semua" onclick="RiwayatManager.hapusSemua()">🗑 Hapus Semua</button>
+          </div>
+          <div class="riwayat-list" id="riwayatList">
+            <div class="riwayat-empty">Belum ada riwayat. Run pencarian untuk menyimpan otomatis.</div>
+          </div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <button class="tab-btn active" id="tabBtnBrute" type="button" onclick="switchTab('brute')">BRUTE FORCE</button>
+        <button class="tab-btn" id="tabBtnCalc" type="button" onclick="switchTab('calc')">HITUNG RUMUS</button>
+      </div>
+      <div id="tabBrute" class="tab-content active">
+<div class="main-grid">
+        <div class="input-section">
+          <div class="section-title">📥 INPUT DATA</div>
+          <div class="data-input">
+            <textarea id="inputNumbers" placeholder="Masukkan angka 4D (satu per baris)"></textarea>
+            <div class="input-action-row" id="inputActionRow">
+              <button class="stat-action-btn" onclick="clearAllData()" id="btnClearDataTop">
+                <span>🗑️</span>
+                <span>HAPUS DATA</span>
+              </button>
+              <button class="stat-action-btn" onclick="resetProgressOnly()" id="btnResetProgressTop">
+                <span>♻️</span>
+                <span>RESET PROGRES</span>
+              </button>
             </div>
-            <i class="fas fa-cookie-bite" style="font-size: 3rem; color: #b8941f;"></i>
-        </div>
-        
-        <div class="controls">
-            <button class="generate-btn" id="generateBtn">
-                <i class="fas fa-magic"></i> Generate Angka 00-99
+            <div class="data-stats">
+              <div class="stat-box">
+                <div class="stat-label">DATA</div>
+                <div class="stat-value" id="dataCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">HASIL</div>
+                <div class="stat-value" id="foundCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">KOMBINASI</div>
+                <div class="stat-value" id="formulaCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">PROSES</div>
+                <div class="stat-value" id="processedCount">0</div>
+              </div>
+            </div>
+            <div class="progress-container">
+              <div class="progress-text">
+                <span>Progress</span>
+                <span id="progressPercent">0%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+              </div>
+            </div>
+          </div>
+          <div class="controls">
+            <div class="control-group">
+              <label>📅 Hari Prediksi</label>
+              <input type="text" id="daysToPredict" value="13" pattern="[0-9]*" maxlength="3" title="1-200 hari" />
+            </div>
+            <div class="control-group">
+              <label>🔢 Digit Prediksi</label>
+              <input type="text" id="digitCount" value="2" pattern="[0-9]*" maxlength="2" title="1-12" />
+            </div>
+            <div class="control-group">
+              <label>🎯 Target Prediksi</label>
+              <select id="targetType">
+                <option value="" disabled>═══════#SPESIFIK</option>
+                <option value="A">AS (Ribuan)</option>
+                <option value="C">COP (Ratusan)</option>
+                <option value="K">KEPALA (Puluhan)</option>
+                <option value="E">EKOR (Satuan)</option>
+                <option value="" disabled>═══════#ANGKA IKUT</option>
+                <option value="AC">AC (2D Depan)</option>
+                <option value="CK">CK (2D Tengah)</option>
+                <option value="KE" selected>KE (2D Belakang)</option>
+                <option value="CB">CB (Colok Bebas)</option>
+                <option value="CM">CM (Colok Macau)</option>
+                <option value="CN">CN (Colok Naga)</option>
+                <option value="" disabled>═══════#JUMLAH ON</option>
+                <option value="JAC">JUMLAH AC (A+C)</option>
+                <option value="JCK">JUMLAH CK (C+K)</option>
+                <option value="J">JUMLAH KE (K+E)</option>
+                <option value="J3D">JUMLAH 3D (C+K+E)</option>
+                <option value="J4D">JUMLAH 4D (A+C+K+E)</option>
+                <option value="" disabled>═══════#SELISIH ON</option>
+                <option value="JSAC">SELISIH AC (A-C)</option>
+                <option value="JSCK">SELISIH CK (C-K)</option>
+                <option value="JS">SELISIH KE (K-E)</option>
+                <option value="" disabled>═══════#SHIO ON</option>
+                <option value="SAC">SHIO AC (dari AC)</option>
+                <option value="SCK">SHIO CK (dari CK)</option>
+                <option value="SKE">SHIO KE (dari KE)</option>
+                <option value="" disabled>═══════#BBFS JITU</option>
+                <option value="TAC">BBFS AC (2D Depan)</option>
+                <option value="TCK">BBFS CK (2D Tengah)</option>
+                <option value="TKE">BBFS KE (2D Belakang)</option>
+                <option value="TCKE">BBFS CKE (3D Belakang)</option>
+                <option value="TACKE">BBFS ACKE (4D Lengkap)</option>
+                <option value="" disabled>═══════#POLTAR</option>
+                <option value="PAC">POLTAR AC (2D Depan)</option>
+                <option value="PCK">POLTAR CK (2D Tengah)</option>
+                <option value="PKE">POLTAR KE (2D Belakang)</option>
+                <option value="PCKE">POLTAR CKE (3D Belakang)</option>
+                <option value="PACKE">POLTAR ACKE (4D Lengkap)</option>
+                <option value="" disabled>═══════#LEMAH SPESIFIK</option>
+                <option value="LA">LEMAH AS (LA)</option>
+                <option value="LC">LEMAH COP (LC)</option>
+                <option value="LK">LEMAH KEPALA (LK)</option>
+                <option value="LE">LEMAH EKOR (LE)</option>
+                <option value="LJ">LEMAH JUMLAH (LJ)</option>
+                <option value="" disabled>═══════#LEMAH ANGKA IKUT</option>
+                <option value="LAC">LEMAH AC (LAC)</option>
+                <option value="LCK">LEMAH CK (LCK)</option>
+                <option value="LKE">LEMAH KE (LKE)</option>
+                <option value="LACKE">LEMAH 4D (ACKE)</option>
+                <option value="" disabled>═══════#LEMAH SHIO</option>
+                <option value="LSAC">LEMAH SHIO AC (LSAC)</option>
+                <option value="LSCK">LEMAH SHIO CK (LSCK)</option>
+                <option value="LSKE">LEMAH SHIO KE (LSKE)</option>
+                <option value="" disabled>═══════#GANJIL/GENAP</option>
+                <option value="GGA">GG AS (Ganjil/Genap)</option>
+                <option value="GGC">GG COP (Ganjil/Genap)</option>
+                <option value="GGK">GG KEPALA (Ganjil/Genap)</option>
+                <option value="GGE">GG EKOR (Ganjil/Genap)</option>
+                <option value="GGJ">GG JUMLAH (Ganjil/Genap)</option>
+                <option value="" disabled>═══════#BESAR/KECIL</option>
+                <option value="BKA">BK AS (Besar/Kecil)</option>
+                <option value="BKC">BK COP (Besar/Kecil)</option>
+                <option value="BKK">BK KEPALA (Besar/Kecil)</option>
+                <option value="BKE">BK EKOR (Besar/Kecil)</option>
+                <option value="BKJ">BK JUMLAH (Besar/Kecil)</option>
+                <option value="" disabled>═══════#GG+BK</option>
+                <option value="GGBKA">GG+BK AS</option>
+                <option value="GGBKC">GG+BK COP</option>
+                <option value="GGBKK">GG+BK KEPALA</option>
+                <option value="GGBKE">GG+BK EKOR</option>
+                <option value="GGBKJ">GG+BK JUMLAH (K+E)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label style="display:flex;align-items:center;gap:3px;">❌ Patah Prediksi <input type="checkbox" id="patahLolosCheck" checked title="Patah Lolos aktif" style="width:8px;height:8px;margin:0;cursor:pointer;accent-color:#667eea;flex-shrink:0;" /></label>
+              <input type="text" id="patahLimit" value="" pattern="[0-5]x?" maxlength="2" placeholder="Kosongkan = tidak ada patah" title="0-5 patah | +x = nonaktifkan patah lolos (contoh: 2x)" />
+            </div>
+            <div class="control-group">
+              <label>🔀 Urutan Pengujian</label>
+              <select id="searchMode">
+                <option value="urutan">Urutan (berurutan)</option>
+                <option value="suffle" selected>Shuffle (Acak Lengkap)</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>🎲 Batch Pengujian</label>
+              <select id="batchSize">
+                <option value="1000">1000</option>
+                <option value="10000">10.000</option>
+                <option value="50000">50.000</option>
+                <option value="100000">100.000</option>
+                <option value="500000">500.000</option>
+                <option value="1000000" selected>1.000.000</option>
+                <option value="2000000">2.000.000</option>
+                <option value="5000000">5.000.000</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label>🚹 1 Kombinasi</label>
+              <div class="control-input checkbox-input">
+                <input type="checkbox" id="enableSingleOnly" />
+                <span>Khusus 1 Komponen</span>
+              </div>
+            </div>
+            <div class="control-group">
+              <label>⚽ Offset Hari <small style="font-size: 7px; opacity: 0.8">(10 default)</small></label>
+              <input type="text" id="singleOffset" value="10" pattern="[0-9]*" maxlength="4" placeholder="1-1000" title="" />
+            </div>
+            <div class="control-group">
+              <label>🛗 3 Kombinasi</label>
+              <div class="control-input checkbox-input">
+                <input type="checkbox" id="enableTriple" />
+                <span>Khusus 3 Komponen</span>
+              </div>
+            </div>
+            <div class="control-group">
+              <label>⛔ Stop Menemukan</label>
+              <input type="text" id="stopAfterCount" value="5" placeholder="Kosongkan = cek semua" inputmode="numeric" pattern="[0-9]*" maxlength="6" />
+            </div>
+          </div>
+          <div class="digit-selection full-width" id="mistikSectionSrc" style="display:none">
+            <div class="mistik-grid" id="MistikCheckboxes">
+              <label class="mistik-item">
+                <input type="checkbox" id="ix" value="ix" data-mistik="ix" name="mistikExtra[]" checked />
+                <span>ix</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="ml" value="ml" data-mistik="ml" name="mistikExtra[]" checked />
+                <span>ml</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="mb" value="mb" data-mistik="mb" name="mistikExtra[]" checked />
+                <span>mb</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="ty" value="ty" data-mistik="ty" name="mistikExtra[]" checked />
+                <span>ty</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m9" value="m9" data-mistik="m9" name="mistikExtra[]" checked />
+                <span>m9</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m0" value="m0" data-mistik="m0" name="mistikExtra[]" />
+                <span>m0</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m1" value="m1" data-mistik="m1" name="mistikExtra[]" />
+                <span>m1</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m2" value="m2" data-mistik="m2" name="mistikExtra[]" />
+                <span>m2</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m3" value="m3" data-mistik="m3" name="mistikExtra[]" />
+                <span>m3</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m4" value="m4" data-mistik="m4" name="mistikExtra[]" />
+                <span>m4</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m5" value="m5" data-mistik="m5" name="mistikExtra[]" />
+                <span>m5</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m6" value="m6" data-mistik="m6" name="mistikExtra[]" />
+                <span>m6</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m7" value="m7" data-mistik="m7" name="mistikExtra[]" />
+                <span>m7</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m8" value="m8" data-mistik="m8" name="mistikExtra[]" />
+                <span>m8</span>
+              </label>
+              <label class="mistik-item">
+                <input type="checkbox" id="m10" value="m10" data-mistik="m10" name="mistikExtra[]" />
+                <span>m10</span>
+              </label>
+              <div class="operasi" id="mistikFooterControls">
+                <div class="operasi-grid">
+                  <div class="operasi-ops" id="opsControls">
+                    <label class="mistik-item">
+                      <input type="checkbox" id="opPlus" value="+" checked />
+                      <span>(+)</span>
+                    </label>
+                    <label class="mistik-item">
+                      <input type="checkbox" id="opMinus" value="-" checked />
+                      <span>(-)</span>
+                    </label>
+                    <label class="mistik-item mistik-final">
+                      <input type="checkbox" id="enableFinalMistik" checked />
+                      <span>mistik akhir</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="digit-selection full-width" id="komponenSectionSrc" style="display:none">
+                        <div class="mistik-grid" id="singleComponentsGrid"></div>
+          </div>
+          <div class="control-group full-width" style="display:none;">
+            <div class="control-input checkbox-input">
+              <input type="checkbox" id="autoContinue" checked />
+              <span>Auto-Continue</span>
+              </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6.7px;margin-bottom:8px;">
+            <button onclick="openMistikPopup()" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border:1px solid #e2d9f3;border-radius:8px;background:linear-gradient(135deg,#f5f0ff,#ede9fe);cursor:pointer;font-size:9px;font-weight:700;color:#7c3aed;gap:6px;">
+              <span>🔮 MISTIK</span>
+              <span id="mistikSummaryBtn" style="font-size:8px;color:#9f7aea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:90px;">loading...</span>
             </button>
-            <button class="lucky-numbers-btn" id="luckyNumbersBtn">
-                <i class="fas fa-star"></i> 6 Angka 00-99
+            <button onclick="openKomponenPopup()" style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border:1px solid #bee3f8;border-radius:8px;background:linear-gradient(135deg,#ebf8ff,#e0f7fa);cursor:pointer;font-size:9px;font-weight:700;color:#2b6cb0;gap:6px;">
+              <span>⚙️ KOMPONEN</span>
+              <span id="komponenSummaryBtn" style="font-size:8px;color:#4299e1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:80px;">semua aktif</span>
             </button>
+          </div>
+          <div class="button-group">
+            <button class="action-button btn-search" onclick="onStartSearchClick()" id="searchBtn">
+              <span>🚀</span>
+              <span>CARI RUMUS</span>
+            </button>
+            <button class="action-button btn-stop" onclick="stopSearch()" id="stopBtn" disabled>
+              <span>⏹️</span>
+              <span>STOP</span>
+            </button>
+            <button class="action-button btn-continue" onclick="onContinueSearchClick()" id="continueBtn" disabled>
+              <span>▶️</span>
+              <span>LANJUT</span>
+            </button>
+          </div>
+          <div class="status-info" id="statusInfo">
+          </div>
         </div>
-        
-        <div class="numbers-display" id="numbersDisplay">
-            <h3><i class="fas fa-dice"></i> 6 Angka (00-99)</h3>
-            <div class="numbers-grid" id="numbersGrid"></div>
-            <p style="margin-top: 15px; color: #666; font-style: italic;">
-                <i class="fas fa-info-circle"></i> Semua angka dalam format 2 digit 00-99.
-            </p>
+        <div class="output-section">
+          <div class="section-header">
+            <div class="section-title">⚡ LIVE TEMUAN (Real-time)</div>
+          </div>
+          <div class="result-table-container" id="liveFindingsWrap">
+            <table class="live-table">
+              <thead>
+                <tr>
+                  <th>Rumus</th>
+                  <th>PolaN</th>
+                  <th>Prediksi</th>
+                  <th>Suffix</th>
+                </tr>
+              </thead>
+              <tbody id="liveFindingsBody"></tbody>
+            </table>
+          </div>
+          <div class="section-header hasil-lengkap-header">
+            <div class="section-title hasil-lengkap-title">📄 HASIL LENGKAP</div>
+            <div style="display:inline-flex;align-items:center;gap:6px;">
+              <label class="header-toggle" for="enableOutputMultiDisplay">
+                <input type="checkbox" id="enableOutputMultiDisplay" />
+                <span>Output Multi</span>
+              </label>
+              <label class="header-toggle" for="enableRotationDisplay">
+                <input type="checkbox" id="enableRotationDisplay" />
+                <span>Output Rotasi</span>
+              </label>
+            </div>
+          </div>
+          <div class="result-display" id="resultOutput"></div>
+          <div id="poltarTablesOutside" class="poltar-tables-outside hidden"></div>
+          <div class="rangkum-top" id="rangkumTopWrap">
+            <button class="action-button btn-summary" onclick="onRangkumClick()" id="rangkumTopBtn">
+              <span>🧩</span>
+              <span>RANGKUM RUMUS</span>
+            </button>
+          </div>
+          <div class="result-panel hidden" id="formulaTableWrap">
+            <div id="bomWrap" class="bom-wrap hidden">
+              <table id="bomTable" class="bom-table">
+                <tbody id="bomBody"></tbody>
+              </table>
+            </div>
+            <div id="freq1dWrap" class="freq1d-wrap hidden">
+              <table id="freq1dTable" class="freq1d-table">
+                <tbody id="freq1dBody">
+                  <tr id="freq1dRowX"></tr>
+                  <tr id="freq1dRowF"></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="result-table-container" id="resultTableContainer">
+              <table id="resultTable">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Rumus</th>
+                  <th>Pola</th>
+                  <th>Patah</th>
+                  <th>Prediksi</th>
+                  <th><input type="checkbox" id="selectAllRows" /></th>
+                </tr>
+              </thead>
+              <tbody id="resultTableBody"></tbody>
+            </table>
+            </div>
+          </div>
+          <div class="output-buttons">
+            <button class="action-button btn-copy-normal" onclick="copyOutput()">
+              <span>📋</span>
+              <span>SALIN NORMAL</span>
+            </button>
+            <button class="action-button btn-copy-multi" onclick="copyOutputMulti()">
+              <span>📑</span>
+              <span>SALIN MULTI</span>
+            </button>
+            <button class="action-button btn-clear-output" onclick="clearOutput()">
+              <span>🗑️</span>
+              <span>HAPUS OUTPUT</span>
+            </button>
+            <button class="action-button btn-copy-selected" onclick="copySelectedRows()">
+              <span>📋</span>
+              <span>SALIN TABEL</span>
+            </button>
+          </div>
         </div>
+      </div>
+      </div>
+      <div id="tabCalc" class="tab-content">
+        <div class="main-grid">
+          <div class="input-section">
+            <div class="section-title">🧮 HITUNG RUMUS</div>
+            <div class="data-input" style="display: none;">
+              <textarea id="calcInputNumbers" placeholder="Masukkan angka 4D (satu per baris)"></textarea>
+            </div>
+            <div class="data-stats">
+              <div class="stat-box">
+                <div class="stat-label">DATA</div>
+                <div class="stat-value" id="calcDataCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">RUMUS</div>
+                <div class="stat-value" id="calcRumusCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">HIT</div>
+                <div class="stat-value" id="calcHitCount">0</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-label">PROSES</div>
+                <div class="stat-value" id="calcProcessedCount">0</div>
+              </div>
+            </div>
+            <div class="controls">
+              <div class="control-group">
+                <label>📅 Hari Prediksi</label>
+                <input type="text" id="calcDaysToPredict" value="7" pattern="[0-9]*" maxlength="3" title="1-200 hari" />
+              </div>
+              <div class="control-group">
+                <label>🎯 Target Prediksi</label>
+                <select id="calcTargetType" style="width:100%;">
+                <option value="" disabled>═══════#SPESIFIK</option>
+                <option value="A">AS (Ribuan)</option>
+                <option value="C">COP (Ratusan)</option>
+                <option value="K">KEPALA (Puluhan)</option>
+                <option value="E">EKOR (Satuan)</option>
+                <option value="" disabled>═══════#ANGKA IKUT</option>
+                <option value="AC">AC (2D Depan)</option>
+                <option value="CK">CK (2D Tengah)</option>
+                <option value="KE" selected>KE (2D Belakang)</option>
+                <option value="CB">CB (Colok Bebas)</option>
+                <option value="CM">CM (Colok Macau)</option>
+                <option value="CN">CN (Colok Naga)</option>
+                <option value="" disabled>═══════#JUMLAH ON</option>
+                <option value="JAC">JUMLAH AC (A+C)</option>
+                <option value="JCK">JUMLAH CK (C+K)</option>
+                <option value="J">JUMLAH KE (K+E)</option>
+                <option value="J3D">JUMLAH 3D (C+K+E)</option>
+                <option value="J4D">JUMLAH 4D (A+C+K+E)</option>
+                <option value="" disabled>═══════#SELISIH ON</option>
+                <option value="JSAC">SELISIH AC (A-C)</option>
+                <option value="JSCK">SELISIH CK (C-K)</option>
+                <option value="JS">SELISIH KE (K-E)</option>
+                <option value="" disabled>═══════#SHIO ON</option>
+                <option value="SAC">SHIO AC (dari AC)</option>
+                <option value="SCK">SHIO CK (dari CK)</option>
+                <option value="SKE">SHIO KE (dari KE)</option>
+                <option value="" disabled>═══════#BBFS JITU</option>
+                <option value="TAC">BBFS AC (2D Depan)</option>
+                <option value="TCK">BBFS CK (2D Tengah)</option>
+                <option value="TKE">BBFS KE (2D Belakang)</option>
+                <option value="TCKE">BBFS CKE (3D Belakang)</option>
+                <option value="TACKE">BBFS ACKE (4D Lengkap)</option>
+                <option value="" disabled>═══════#POLTAR</option>
+                <option value="PAC">POLTAR AC (2D Depan)</option>
+                <option value="PCK">POLTAR CK (2D Tengah)</option>
+                <option value="PKE">POLTAR KE (2D Belakang)</option>
+                <option value="PCKE">POLTAR CKE (3D Belakang)</option>
+                <option value="PACKE">POLTAR ACKE (4D Lengkap)</option>
+                <option value="" disabled>═══════#LEMAH SPESIFIK</option>
+                <option value="LA">LEMAH AS (LA)</option>
+                <option value="LC">LEMAH COP (LC)</option>
+                <option value="LK">LEMAH KEPALA (LK)</option>
+                <option value="LE">LEMAH EKOR (LE)</option>
+                <option value="LJ">LEMAH JUMLAH (LJ)</option>
+                <option value="" disabled>═══════#LEMAH ANGKA IKUT</option>
+                <option value="LAC">LEMAH AC (LAC)</option>
+                <option value="LCK">LEMAH CK (LCK)</option>
+                <option value="LKE">LEMAH KE (LKE)</option>
+                <option value="LACKE">LEMAH 4D (ACKE)</option>
+                <option value="" disabled>═══════#LEMAH SHIO</option>
+                <option value="LSAC">LEMAH SHIO AC (LSAC)</option>
+                <option value="LSCK">LEMAH SHIO CK (LSCK)</option>
+                <option value="LSKE">LEMAH SHIO KE (LSKE)</option>
+                <option value="" disabled>═══════#GANJIL/GENAP</option>
+                <option value="GGA">GG AS (Ganjil/Genap)</option>
+                <option value="GGC">GG COP (Ganjil/Genap)</option>
+                <option value="GGK">GG KEPALA (Ganjil/Genap)</option>
+                <option value="GGE">GG EKOR (Ganjil/Genap)</option>
+                <option value="GGJ">GG JUMLAH (Ganjil/Genap)</option>
+                <option value="" disabled>═══════#BESAR/KECIL</option>
+                <option value="BKA">BK AS (Besar/Kecil)</option>
+                <option value="BKC">BK COP (Besar/Kecil)</option>
+                <option value="BKK">BK KEPALA (Besar/Kecil)</option>
+                <option value="BKE">BK EKOR (Besar/Kecil)</option>
+                <option value="BKJ">BK JUMLAH (Besar/Kecil)</option>
+                <option value="" disabled>═══════#GG+BK</option>
+                <option value="GGBKA">GG+BK AS</option>
+                <option value="GGBKC">GG+BK COP</option>
+                <option value="GGBKK">GG+BK KEPALA</option>
+                <option value="GGBKE">GG+BK EKOR</option>
+                <option value="GGBKJ">GG+BK JUMLAH (K+E)</option>
+              </select>
+              </div>
+            </div>
+            <div class="controls" id="calcBruteExtraWrap" style="display:none;">
+              <div class="control-group">
+                <label>🔢 Digit Prediksi</label>
+                <input type="text" id="calcBruteDigitCount" value="2" pattern="[0-9]*" maxlength="2" placeholder="2" title="Jumlah digit pola (1-10)" />
+              </div>
+              <div class="control-group">
+                <label>⛔ Stop Menemukan</label>
+                <input type="text" id="calcBruteStopFound" value="1" pattern="[0-9]*" maxlength="4" placeholder="1" title="Maksimal X pola per rumus (0 = hanya patah terkecil)" />
+              </div>
+            </div>
+            <div class="controls" id="calcBrutePolaWrap">
+              <div class="control-group">
+                <label class="control-input checkbox-input" for="calcEnableBrutePola" style="cursor:pointer;">
+                  <input type="checkbox" id="calcEnableBrutePola" />
+                  <span>🔀 Brute Force <small style="font-size: 7px; opacity: 0.8">(tanpa polaN)</small></span>
+                </label>
+              </div>
+              <div class="control-group">
+                <label class="control-input checkbox-input" for="calcEnablePatahLolos" style="cursor:pointer;">
+                  <input type="checkbox" id="calcEnablePatahLolos" />
+                  <span>✅ Patah Lolos <small style="font-size: 7px; opacity: 0.8">(posisi valid)</small></span>
+                </label>
+              </div>
+            </div>
+            <div class="data-input">
+              <textarea id="calcInputRumus" placeholder="Contoh (Mode Normal):
+Js4ml+Js6ix.(m9) N4N1
+J4D4mb-J4D6ix.(ml) N0N4
+Contoh (Mode Brute Force Pola aktif):
+Js4ml+Js6ix.(m9)
+J4D4mb-J4D6ix.(ml)." style="height: 160px;"></textarea>
+            </div>
+            <div class="button-group single-col">
+              <button class="action-button btn-search" type="button" onclick="onCalcRunClick()" id="calcRunBtn">
+                <span>🧮</span><span>HITUNG RUMUS</span>
+              </button>
+              <button class="action-button btn-clear-output" type="button" onclick="clearCalcInput()" id="calcClearInputBtn">
+                <span>🗑️</span><span>HAPUS INPUT RUMUS</span>
+              </button>
+            </div>
+          </div>
+          <div class="output-section">
+            <div class="section-header">
+              <div class="section-title">📋 OUTPUT HITUNG</div>
+              <div style="display:inline-flex;align-items:center;gap:6px;">
+                <label class="header-toggle" for="calcEnableOutputMultiDisplay">
+                  <input type="checkbox" id="calcEnableOutputMultiDisplay" />
+                  <span>Output Multi</span>
+                </label>
+                <label class="header-toggle" for="calcEnableRotationDisplay">
+                  <input type="checkbox" id="calcEnableRotationDisplay" />
+                  <span>Output Rotasi</span>
+                </label>
+              </div>
+            </div>
+            <div id="calcFreq1dWrap" class="freq1d-wrap hidden">
+              <table id="calcFreq1dTable" class="freq1d-table">
+                <tbody id="calcFreq1dBody">
+                  <tr id="calcFreq1dRowX"></tr>
+                  <tr id="calcFreq1dRowF"></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="calc-table-container" id="calcTableWrap">
+              <table class="calc-table" id="calcResultTable">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Rumus</th>
+                    <th>Pola</th>
+                    <th>Patah</th>
+                    <th>Prediksi</th>
+                    <th>Suffix</th>
+                  </tr>
+                </thead>
+                <tbody id="calcTableBody"></tbody>
+              </table>
+            </div>
+            <div class="result-display" id="calcOutputDisplay"></div>
+            <div id="calcBomWrap" class="bom-wrap hidden">
+              <table id="calcBomTable" class="bom-table">
+                <tbody id="calcBomBody"></tbody>
+              </table>
+            </div>
+            <div class="output-buttons">
+              <button class="action-button btn-copy-normal" type="button" onclick="calcCopyNormal()">
+                <span>📋</span><span>SALIN NORMAL</span>
+              </button>
+              <button class="action-button btn-copy-multi" type="button" onclick="calcCopyMulti()">
+                <span>📑</span><span>SALIN MULTI</span>
+              </button>
+              <button class="action-button btn-clear-output" type="button" onclick="clearCalcOutput()">
+                <span>🗑️</span><span>HAPUS OUTPUT</span>
+              </button>
+              <button class="action-button btn-copy-selected" type="button" onclick="calcCopyTable()">
+                <span>📋</span><span>SALIN TABEL</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="version">Prediksi Tools - Rumus Otomatis</div>
+        <div>© RAN</div>
+      </div>
     </div>
-
-    <script>
-        function formatTwoDigits(num) {
-            return num.toString().padStart(2, '0');
+<div id="demoPopupOverlay" onclick="if(event.target===this)document.getElementById('demoPopupOverlay').style.display='none'" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999999;align-items:center;justify-content:center;padding:10px;">
+  <div id="demoModal">
+    <div class="riwayat-modal-header">
+      <h2>&#128274; Versi Demo</h2>
+      <button class="riwayat-modal-close" onclick="document.getElementById('demoPopupOverlay').style.display='none'">&#x2715;</button>
+    </div>
+    <div class="riwayat-list" style="align-items:center;justify-content:center;padding:30px 24px;text-align:center;">
+      <div style="font-size:44px;margin-bottom:14px;">&#128274;</div>
+      <div style="font-size:15px;font-weight:700;color:#e53e3e;margin-bottom:10px;letter-spacing:1px;">VERSI DEMO</div>
+      <div class="riwayat-empty" style="margin:0 0 20px;font-size:13px;line-height:1.8;color:#4a5568;">
+        Ini hanya <strong style="color:#e53e3e;">DEMO TAMPILAN</strong>.<br>
+        Fungsi pencarian rumus tidak aktif.<br><br>
+        Jika berminat dengan versi <strong style="color:#38a169;">FULL VERSION</strong>,<br>
+        silakan hubungi whatsapp di bawah:
+      </div>
+      <a href="https://wa.me/6287789473638" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;text-decoration:none;padding:11px 24px;border-radius:999px;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(37,211,102,0.35);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        087789473638
+      </a>
+    </div>
+  </div>
+</div>
+<style>
+#demoModal {
+  background:#fff; border-radius:14px;
+  width:100%; max-width:600px; max-height:88vh;
+  display:flex; flex-direction:column;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3); overflow:hidden;
+}
+body.dark-theme #demoModal { background:#2d3748; color:#e2e8f0; }
+body.dark-theme #demoModal .riwayat-modal-header { border-color:#4a5568; }
+body.dark-theme #demoModal .riwayat-empty { color:#a0aec0 !important; }
+</style>
+<script>
+(function () {
+  (function initZoomUI() {
+    var BASE=1, MAX=100/67, STEP=0.1;
+    var root=document.documentElement;
+    var btnIn=document.getElementById('zoomIn');
+    var btnOut=document.getElementById('zoomOut');
+    function clamp(v){ return Math.min(MAX,Math.max(BASE,v)); }
+    function getScale(){
+      var v=parseFloat(localStorage.getItem('uiZoom'));
+      return isFinite(v)?clamp(v):BASE;
+    }
+    function updateButtons(s){
+      if(btnOut){ btnOut.disabled=s<=BASE+1e-6; btnOut.title=btnOut.disabled?'Ukuran minimum (67%)':'Perkecil UI'; }
+      if(btnIn){  btnIn.disabled=s>=MAX-1e-6;   btnIn.title=btnIn.disabled?'Ukuran maksimum (100%)':'Perbesar UI'; }
+    }
+    function setScale(v){
+      var s=clamp(v);
+      root.style.setProperty('--ui-zoom',(+s.toFixed(6)).toString());
+      localStorage.setItem('uiZoom',(+s.toFixed(6)).toString());
+      updateButtons(s);
+    }
+    setScale(getScale());
+    if(btnIn)  btnIn.addEventListener('click',  function(){ setScale(getScale()+STEP); });
+    if(btnOut) btnOut.addEventListener('click', function(){ setScale(getScale()-STEP); });
+  })();
+  (function initTheme() {
+    var themeButton=document.getElementById('themeButton');
+    var themeIcon=document.getElementById('themeIcon');
+    var themeText=document.getElementById('themeText');
+    function getPreferred(){
+      var s=localStorage.getItem('theme'); if(s) return s;
+      if(window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+      return 'light';
+    }
+    function setTheme(t){
+      if(t==='dark'){
+        document.body.classList.add('dark-theme');
+        if(themeIcon) themeIcon.textContent='\u2600\uFE0F';
+        if(themeText) themeText.textContent='Mode Terang';
+      } else {
+        document.body.classList.remove('dark-theme');
+        if(themeIcon) themeIcon.textContent='\uD83C\uDF19';
+        if(themeText) themeText.textContent='Mode Gelap';
+      }
+      if(themeButton){ themeButton.title=themeText?themeText.textContent:''; }
+      localStorage.setItem('theme',t);
+    }
+    setTheme(getPreferred());
+    if(themeButton) themeButton.addEventListener('click',function(){
+      setTheme(document.body.classList.contains('dark-theme')?'light':'dark');
+    });
+  })();
+  function switchTab(tab){
+    var brute=document.getElementById('tabBrute'), calc=document.getElementById('tabCalc');
+    var bBtn=document.getElementById('tabBtnBrute'), cBtn=document.getElementById('tabBtnCalc');
+    if(!brute||!calc||!bBtn||!cBtn) return;
+    var isCalc=tab==='calc';
+    brute.classList.toggle('active',!isCalc); calc.classList.toggle('active',isCalc);
+    bBtn.classList.toggle('active',!isCalc);  cBtn.classList.toggle('active',isCalc);
+    try{ window.scrollTo({top:0,behavior:'smooth'}); }catch(e){ window.scrollTo(0,0); }
+  }
+  window.switchTab=switchTab;
+  document.addEventListener('DOMContentLoaded',function(){
+    var brute=document.getElementById('tabBrute'), calc=document.getElementById('tabCalc');
+    var bBtn=document.getElementById('tabBtnBrute'), cBtn=document.getElementById('tabBtnCalc');
+    if(brute&&calc&&bBtn&&cBtn){
+      brute.classList.add('active'); calc.classList.remove('active');
+      bBtn.classList.add('active');  cBtn.classList.remove('active');
+    }
+  });
+  window.RiwayatManager=(function(){
+    function openModal(){ document.getElementById('riwayatOverlay').classList.add('open'); }
+    function closeModal(){ document.getElementById('riwayatOverlay').classList.remove('open'); }
+    return { openModal:openModal, closeModal:closeModal,
+      toggleCard:function(){}, hapusItem:function(){},
+      hapusSemua:function(){}, lihatOutput:function(){}, updateBadge:function(){} };
+  })();
+  var _mistikMoved=false;
+  function openMistikPopup(){
+    if(!_mistikMoved){
+      var slot=document.getElementById('mistikPopupSlot');
+      var src=document.getElementById('mistikSectionSrc');
+      if(slot&&src){ while(src.firstChild) slot.appendChild(src.firstChild); _mistikMoved=true; }
+    }
+    document.getElementById('mistikPopupOverlay').classList.add('open');
+    updateMistikSummary();
+  }
+  function updateMistikSummary(){
+    try{
+      var cbs=document.querySelectorAll('input[data-mistik]');
+      var active=Array.from(cbs).filter(function(c){ return c.checked; });
+      var el=document.getElementById('mistikSummaryBtn');
+      if(!el) return;
+      if(active.length===0) el.textContent='tidak ada';
+      else if(active.length===cbs.length) el.textContent='semua aktif';
+      else el.textContent=active.map(function(c){ return c.value; }).slice(0,4).join(', ')+(active.length>4?'\u2026':'');
+    }catch(e){}
+  }
+  window.openMistikPopup=openMistikPopup;
+  window.updateMistikSummary=updateMistikSummary;
+  var _komponenReady=false;
+  function buildKomponenGrid(){
+    var grid=document.getElementById('singleComponentsGrid');
+    if(!grid) return;
+    var OPTS=[
+      {v:'__sep_default__',t:'DEFAULT',sep:true},
+      {v:'A',t:'A'},{v:'C',t:'C'},{v:'K',t:'K'},{v:'E',t:'E'},
+      {v:'J',t:'J'},{v:'Js',t:'Js'},{v:'J3D',t:'J3D'},{v:'J4D',t:'J4D'},
+      {v:'__sep_j__',t:'J-FAMILY',sep:true},
+      {v:'JAC',t:'JAC'},{v:'JCK',t:'JCK'},{v:'JACK',t:'JACK'},{v:'JAK',t:'JAK'},
+      {v:'JAE',t:'JAE'},{v:'JCE',t:'JCE'},{v:'JsAC',t:'JsAC'},{v:'JsCK',t:'JsCK'},
+      {v:'JsAK',t:'JsAK'},{v:'JsAE',t:'JsAE'},{v:'JsCE',t:'JsCE'},
+      {v:'__sep_naik__',t:'NAIK',sep:true},
+      {v:'A^1',t:'A^1'},{v:'A^2',t:'A^2'},{v:'A^3',t:'A^3'},{v:'A^4',t:'A^4'},
+      {v:'C^1',t:'C^1'},{v:'C^2',t:'C^2'},{v:'C^3',t:'C^3'},{v:'C^4',t:'C^4'},
+      {v:'K^1',t:'K^1'},{v:'K^2',t:'K^2'},{v:'K^3',t:'K^3'},{v:'K^4',t:'K^4'},
+      {v:'E^1',t:'E^1'},{v:'E^2',t:'E^2'},{v:'E^3',t:'E^3'},{v:'E^4',t:'E^4'},
+      {v:'__sep_kali__',t:'KALI',sep:true},
+      {v:'AA',t:'Ax2'},{v:'AAA',t:'Ax3'},{v:'AAAA',t:'Ax4'},{v:'AAAAA',t:'Ax5'},
+      {v:'CC',t:'Cx2'},{v:'CCC',t:'Cx3'},{v:'CCCC',t:'Cx4'},{v:'CCCCC',t:'Cx5'},
+      {v:'KK',t:'Kx2'},{v:'KKK',t:'Kx3'},{v:'KKKK',t:'Kx4'},{v:'KKKKK',t:'Kx5'},
+      {v:'EE',t:'Ex2'},{v:'EEE',t:'Ex3'},{v:'EEEE',t:'Ex4'},{v:'EEEEE',t:'Ex5'}
+    ];
+    var secEnd={J4D:'Default',JsCE:'J-Family','E^4':'Naik',EEEEE:'Kali'};
+    var hDef='', hLain='', secItems=[], inLain=false;
+    OPTS.forEach(function(o){
+      if(o.sep){
+        var sh='<div class="mistik-sep-label">'+o.t+'</div>';
+        if(o.v==='__sep_j__'){ inLain=true; hLain+=sh; }
+        else if(inLain) hLain+=sh; else hDef+=sh;
+        secItems=[];
+      } else {
+        var ih='<label class="mistik-item"><input type="checkbox" value="'+o.v+'"><span>'+o.t+'</span></label>';
+        if(inLain) hLain+=ih; else hDef+=ih;
+        secItems.push(o.v);
+        if(secEnd[o.v]){
+          var sv=JSON.stringify(secItems);
+          var ah='<label class="mistik-item mistik-sec-all" data-sec-vals="'+sv.replace(/"/g,'&quot;')+'"><input type="checkbox" class="sec-toggle-cb"><span>Semua</span></label>';
+          if(inLain){
+            hLain+=ah;
+          } else {
+            hDef+=ah;
+            hDef+='<div class="komp-lainnya-toggle" id="lanjutanToggle">&#9658; TAMPILKAN LAINNYA</div>';
+          }
+          secItems=[];
         }
-        
-        const fortuneCookie = document.getElementById('fortuneCookie');
-        const fortunePaper = document.getElementById('fortunePaper');
-        const currentFortune = document.getElementById('currentFortune');
-        const fortuneMessage = document.getElementById('fortuneMessage');
-        const generateBtn = document.getElementById('generateBtn');
-        const luckyNumbersBtn = document.getElementById('luckyNumbersBtn');
-        const historyBtn = document.getElementById('historyBtn');
-        const numbersDisplay = document.getElementById('numbersDisplay');
-        const numbersGrid = document.getElementById('numbersGrid');
-        const historySection = document.getElementById('historySection');
-        const historyList = document.getElementById('historyList');
-        const clearHistoryBtn = document.getElementById('clearHistory');
-        const notification = document.getElementById('notification');
-        
-        let currentNumber = "00";
-        let history = JSON.parse(localStorage.getItem('fortuneHistory')) || [];
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            updateHistoryDisplay();
-            generateRandomFortune();
+      }
+    });
+    grid.innerHTML=hDef+'<div id="lanjutanWrap" style="display:none">'+hLain+'</div>';
+    var tog=document.getElementById('lanjutanToggle');
+    if(tog) tog.addEventListener('click',function(){
+      var d=document.getElementById('lanjutanWrap');
+      var open=d.style.display!=='none'&&d.style.display!=='';
+      d.style.display=open?'none':'contents';
+      tog.innerHTML=open?'&#9658; TAMPILKAN LAINNYA':'&#9660; SEMBUNYIKAN LAINNYA';
+    });
+    var defaults=new Set(['A','C','K','E','J','Js','J3D','J4D']);
+    grid.querySelectorAll('input[type="checkbox"]:not(.sec-toggle-cb)').forEach(function(cb){
+      if(defaults.has(cb.value)) cb.checked=true;
+    });
+    syncSec();
+    grid.addEventListener('change',function(e){
+      if(e.target.classList.contains('sec-toggle-cb')){
+        var lbl=e.target.closest('.mistik-sec-all');
+        var vals=new Set(JSON.parse(lbl.dataset.secVals));
+        var all=e.target.checked;
+        grid.querySelectorAll('input[type="checkbox"]:not(.sec-toggle-cb)').forEach(function(cb){
+          if(vals.has(cb.value)) cb.checked=all;
         });
-        
-        function generateRandomFortune() {
-            const randomNum = Math.floor(Math.random() * 100);
-            currentNumber = formatTwoDigits(randomNum);
-            
-            const messages = [
-                ""
-            ];
-            
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            
-            currentFortune.textContent = currentNumber;
-            fortuneMessage.textContent = randomMessage;
-            
-            fortunePaper.style.display = 'flex';
-            fortuneCookie.classList.add('shake');
-            
-            setTimeout(() => {
-                fortuneCookie.classList.remove('shake');
-            }, 500);
-            
-            saveToHistory(currentNumber, randomMessage);
-            
-            return currentNumber;
-        }
-        
-        function generateLuckyNumbers() {
-            const numbers = new Set();
-            
-            while (numbers.size < 6) {
-                const num = Math.floor(Math.random() * 100);
-                numbers.add(formatTwoDigits(num));
-            }
-            
-            const sortedNumbers = Array.from(numbers).sort();
-            
-            displayLuckyNumbers(sortedNumbers);
-            
-            numbersDisplay.style.display = 'block';
-            historySection.style.display = 'none';
-            
-            return sortedNumbers;
-        }
-        
-        function displayLuckyNumbers(numbers) {
-            numbersGrid.innerHTML = '';
-            
-            numbers.forEach(number => {
-                const numberBox = document.createElement('div');
-                numberBox.className = 'number-box pulse';
-                numberBox.textContent = number;
-                
-                if (number === "00") {
-                    numberBox.classList.add('double-zero');
-                }
-                
-                numbersGrid.appendChild(numberBox);
-            });
-        }
-        
-        function saveToHistory(number, message) {
-            const historyItem = {
-                number: number,
-                message: message,
-                date: new Date().toLocaleString('id-ID'),
-                timestamp: new Date().getTime()
-            };
-            
-            history.unshift(historyItem);
-            
-            if (history.length > 20) {
-                history.pop();
-            }
-            
-            localStorage.setItem('fortuneHistory', JSON.stringify(history));
-            
-            updateHistoryDisplay();
-            
-            showNotification();
-        }
-        
-        function updateHistoryDisplay() {
-            historyList.innerHTML = '';
-            
-            if (history.length === 0) {
-                historyList.innerHTML = '<p style="text-align: center; color: #888;">Belum ada riwayat angka keberuntungan.</p>';
-                return;
-            }
-            
-            history.forEach(item => {
-                const historyItem = document.createElement('div');
-                historyItem.className = 'history-item';
-                
-                const dateObj = new Date(item.timestamp);
-                const formattedDate = dateObj.toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                });
-                
-                historyItem.innerHTML = `
-                    <div>
-                        <strong style="color: ${item.number === '00' ? '#4a6fa5' : '#d4af37'}; 
-                                font-size: 1.2rem; letter-spacing: 1px;">${item.number}</strong>
-                        <div style="font-size: 0.9rem; color: #666;">${item.message}</div>
-                    </div>
-                    <div class="history-date">${formattedDate}</div>
-                `;
-                
-                historyList.appendChild(historyItem);
-            });
-        }
-        
-        function showNotification() {
-            notification.style.display = 'block';
-            
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-        
-        fortuneCookie.addEventListener('click', function() {
-            generateRandomFortune();
-            this.classList.add('pulse');
-            
-            setTimeout(() => {
-                this.classList.remove('pulse');
-            }, 500);
-        });
-        
-        generateBtn.addEventListener('click', function() {
-            generateRandomFortune();
-            this.classList.add('pulse');
-            
-            setTimeout(() => {
-                this.classList.remove('pulse');
-            }, 500);
-        });
-        
-        luckyNumbersBtn.addEventListener('click', function() {
-            generateLuckyNumbers();
-            this.classList.add('pulse');
-            
-            setTimeout(() => {
-                this.classList.remove('pulse');
-            }, 500);
-        });
-        
-        historyBtn.addEventListener('click', function() {
-            historySection.style.display = 'block';
-            numbersDisplay.style.display = 'none';
-            this.classList.add('pulse');
-            
-            setTimeout(() => {
-                this.classList.remove('pulse');
-            }, 500);
-        });
-        
-        clearHistoryBtn.addEventListener('click', function() {
-            if (confirm("Apakah Anda yakin ingin menghapus semua riwayat?")) {
-                history = [];
-                localStorage.removeItem('fortuneHistory');
-                updateHistoryDisplay();
-                
-                notification.innerHTML = '<i class="fas fa-trash"></i> Riwayat telah dihapus!';
-                notification.style.background = '#f44336';
-                showNotification();
-                
-                setTimeout(() => {
-                    notification.innerHTML = '<i class="fas fa-check-circle"></i> Angka keberuntungan telah disimpan!';
-                    notification.style.background = '#4CAF50';
-                }, 3500);
-            }
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.code === 'Space' || e.code === 'Enter') {
-                e.preventDefault();
-                generateRandomFortune();
-            }
-            
-            if (e.code === 'KeyL' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                generateLuckyNumbers();
-            }
-        });
-        
-        fortuneCookie.addEventListener('touchstart', function() {
-            this.style.transform = 'scale(0.95)';
-        });
-        
-        fortuneCookie.addEventListener('touchend', function() {
-            this.style.transform = 'scale(1)';
-            generateRandomFortune();
-        });
-        
-        setTimeout(() => {
-            generateRandomFortune();
-        }, 1000);
-    </script>
+      }
+      syncSec();
+      updateKomponenSummary();
+    });
+    function syncSec(){
+      grid.querySelectorAll('.mistik-sec-all').forEach(function(lbl){
+        var vals=new Set(JSON.parse(lbl.dataset.secVals));
+        var cbs=Array.from(grid.querySelectorAll('input[type="checkbox"]:not(.sec-toggle-cb)')).filter(function(cb){ return vals.has(cb.value); });
+        var cb=lbl.querySelector('.sec-toggle-cb');
+        if(!cb) return;
+        var n=cbs.filter(function(c){ return c.checked; }).length;
+        cb.indeterminate=n>0&&n<cbs.length;
+        cb.checked=cbs.length>0&&n===cbs.length;
+      });
+    }
+  }
+  function openKomponenPopup(){
+    if(!_komponenReady){
+      var slot=document.getElementById('komponenPopupSlot');
+      var src=document.getElementById('komponenSectionSrc');
+      if(slot&&src){ while(src.firstChild) slot.appendChild(src.firstChild); }
+      buildKomponenGrid();
+      _komponenReady=true;
+    }
+    document.getElementById('komponenPopupOverlay').classList.add('open');
+    updateKomponenSummary();
+  }
+  function updateKomponenSummary(){
+    try{
+      var grid=document.getElementById('singleComponentsGrid');
+      var el=document.getElementById('komponenSummaryBtn');
+      if(!grid||!el) return;
+      var cbs=grid.querySelectorAll('input[type="checkbox"]:not(.sec-toggle-cb)');
+      if(cbs.length===0){ el.textContent='semua aktif'; return; }
+      var active=Array.from(cbs).filter(function(c){ return c.checked; });
+      if(active.length===0) el.textContent='tidak ada';
+      else if(active.length===cbs.length) el.textContent='semua aktif';
+      else el.textContent=active.length+' / '+cbs.length+' aktif';
+    }catch(e){}
+  }
+  window.openKomponenPopup=openKomponenPopup;
+  window.updateKomponenSummary=updateKomponenSummary;
+  document.addEventListener('change',function(e){
+    if(e.target&&e.target.getAttribute('data-mistik')) updateMistikSummary();
+    if(e.target&&e.target.closest&&e.target.closest('#singleComponentsGrid')) updateKomponenSummary();
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    setTimeout(updateMistikSummary,300);
+    setTimeout(updateKomponenSummary,600);
+  });
+  function showDemoPopup(){ document.getElementById('demoPopupOverlay').style.display='flex'; }
+  window.onStartSearchClick=showDemoPopup;
+  window.onCalcRunClick=showDemoPopup;
+  window.onContinueSearchClick=showDemoPopup;
+  window.onRangkumClick=showDemoPopup;
+  window.stopSearch=function(){};
+  window.resetProgressOnly=function(){};
+  window.clearAllData=function(){};
+  window.clearOutput=function(){};
+  window.copyOutput=function(){};
+  window.copyOutputMulti=function(){};
+  window.copySelectedRows=function(){};
+  window.calcCopyNormal=function(){};
+  window.calcCopyMulti=function(){};
+  window.calcCopyTable=function(){};
+  window.clearCalcInput=function(){};
+  window.clearCalcOutput=function(){};
+  document.addEventListener('DOMContentLoaded',function(){
+    ['searchBtn','calcRunBtn'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){ el.removeAttribute('onclick'); el.addEventListener('click',function(e){ e.stopPropagation(); showDemoPopup(); }); }
+    });
+  });
+})();
+</script>
 </body>
 </html>
